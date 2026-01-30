@@ -1,0 +1,42 @@
+<!-- Slide 14: Best Practices -->
+<div style="padding: 38px; background: white; ">
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+    <div style="padding: 24px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+      <div style="margin-bottom: 16px;">
+        <svg style="width: 40px; height: 40px; color: #16a34a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      </div>
+      <h3 style="font-size: 24px; font-weight: bold; margin-bottom: 16px; color: #1e293b;">DOs - Nên làm</h3>
+      <ul style="color: #475569; font-size: 24px; line-height: 1.8; padding-left: 20px; margin: 0;">
+        <li>Dùng <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace;">const</code> làm mặc định</li>
+        <li>Dùng <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace;">interface</code> cho cấu trúc Object</li>
+        <li>Đặt tên biến rõ ràng, có ý nghĩa</li>
+        <li>Tận dụng Type Inference</li>
+        <li>Dùng <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace;">unknown</code> thay vì <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace;">any</code></li>
+      </ul>
+    </div>
+    
+    <div style="padding: 24px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+      <div style="margin-bottom: 16px;">
+        <svg style="width: 40px; height: 40px; color: #dc2626;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+      </div>
+      <h3 style="font-size: 24px; font-weight: bold; margin-bottom: 16px; color: #1e293b;">DON'Ts - Tránh làm</h3>
+      <ul style="color: #475569; font-size: 24px; line-height: 1.8; padding-left: 20px; margin: 0;">
+        <li>Tránh dùng <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace;">var</code></li>
+        <li>Hạn chế dùng <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace;">any</code></li>
+        <li>Tránh đặt tên biến bằng Tiếng Việt</li>
+        <li>Không viết tắt gây khó hiểu</li>
+        <li>Không bỏ qua Type annotations khi cần</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div style="margin-top: 40px; padding: 24px; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);  border-left: 4px solid #2563eb;">
+    <p style="font-size: 24px; color: #1e40af; margin: 0; font-weight: 500;">
+      <strong>🎯 Mục tiêu:</strong> Code TypeScript phải dễ đọc, dễ maintain, và type-safe cho toàn bộ team!
+    </p>
+  </div>
+</div>

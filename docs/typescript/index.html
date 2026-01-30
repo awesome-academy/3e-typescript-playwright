@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TypeScript & Playwright Training - Slide Index</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 48px;
+    }
+    
+    .header h1 {
+      font-size: 48px;
+      font-weight: 900;
+      margin-bottom: 16px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .header p {
+      font-size: 20px;
+      opacity: 0.9;
+    }
+    
+    .modules {
+      display: grid;
+      gap: 32px;
+    }
+    
+    .module {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    
+    .module-title {
+      font-size: 32px;
+      font-weight: bold;
+      color: #1e293b;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 3px solid #3b82f6;
+    }
+    
+    .slides-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    
+    .slide-card {
+      display: block;
+      padding: 20px;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #1e293b;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .slide-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+      border-color: #3b82f6;
+      background: #eff6ff;
+    }
+    
+    .slide-number {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      background: #3b82f6;
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 40px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+    
+    .slide-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #1e293b;
+    }
+    
+    .slide-description {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: #dbeafe;
+      color: #1e40af;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    
+    .footer {
+      text-align: center;
+      color: white;
+      margin-top: 48px;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🚀 TypeScript & Playwright Training</h1>
+      <p>Awesome Academy - 3E Course</p>
+    </div>
+    
+    <div class="modules">
+      <!-- Module 01: Variables & Data Types -->
+      <div class="module">
+        <h2 class="module-title">📚 Module 01: Variables & Data Types</h2>
+        <div class="slides-grid">
+          
+          <a href="module1/slide-00-cover.html" class="slide-card" target="_blank">
+            <div class="slide-number">1</div>
+            <div class="slide-title">Trang bìa</div>
+            <div class="slide-description">Giới thiệu Module 01</div>
+            <span class="badge">Cover</span>
+          </a>
+          
+          <a href="module1/slide-01-objectives.html" class="slide-card" target="_blank">
+            <div class="slide-number">2</div>
+            <div class="slide-title">Mục tiêu học tập</div>
+            <div class="slide-description">Learning Objectives</div>
+            <span class="badge">Objectives</span>
+          </a>
+          
+          <a href="module1/slide-02-roadmap.html" class="slide-card" target="_blank">
+            <div class="slide-number">3</div>
+            <div class="slide-title">Nội dung bài học</div>
+            <div class="slide-description">Roadmap & Topics</div>
+            <span class="badge">Roadmap</span>
+          </a>
+          
+          <a href="module1/slide-03-typescript-overview.html" class="slide-card" target="_blank">
+            <div class="slide-number">4</div>
+            <div class="slide-title">Tổng quan TypeScript</div>
+            <div class="slide-description">What is TypeScript?</div>
+            <span class="badge">Overview</span>
+          </a>
+          
+          <a href="module1/slide-04-code-comparison.html" class="slide-card" target="_blank">
+            <div class="slide-number">5</div>
+            <div class="slide-title">So sánh JS vs TS</div>
+            <div class="slide-description">JavaScript vs TypeScript</div>
+            <span class="badge">Comparison</span>
+          </a>
+          
+          <a href="module1/slide-05-coding-conventions.html" class="slide-card" target="_blank">
+            <div class="slide-number">6</div>
+            <div class="slide-title">Coding Conventions</div>
+            <div class="slide-description">Best practices & naming</div>
+            <span class="badge">Standards</span>
+          </a>
+          
+          <a href="module1/slide-06-naming-table.html" class="slide-card" target="_blank">
+            <div class="slide-number">7</div>
+            <div class="slide-title">Bảng quy tắc đặt tên</div>
+            <div class="slide-description">Naming conventions table</div>
+            <span class="badge">Reference</span>
+          </a>
+          
+          <a href="module1/slide-07-let-const-var.html" class="slide-card" target="_blank">
+            <div class="slide-number">8</div>
+            <div class="slide-title">Khai báo biến</div>
+            <div class="slide-description">let, const, var</div>
+            <span class="badge">Variables</span>
+          </a>
+          
+          <a href="module1/slide-08-playwright-usage.html" class="slide-card" target="_blank">
+            <div class="slide-number">9</div>
+            <div class="slide-title">Ứng dụng trong Playwright</div>
+            <div class="slide-description">Practical examples</div>
+            <span class="badge">Practice</span>
+          </a>
+          
+          <a href="module1/slide-09-basic-types.html" class="slide-card" target="_blank">
+            <div class="slide-number">10</div>
+            <div class="slide-title">Kiểu dữ liệu cơ bản</div>
+            <div class="slide-description">String, Number, Boolean, Array</div>
+            <span class="badge">Data Types</span>
+          </a>
+          
+          <a href="module1/slide-10-any-vs-unknown.html" class="slide-card" target="_blank">
+            <div class="slide-number">11</div>
+            <div class="slide-title">any vs unknown</div>
+            <div class="slide-description">Type safety comparison</div>
+            <span class="badge">Advanced</span>
+          </a>
+          
+          <a href="module1/slide-11-interface-vs-type.html" class="slide-card" target="_blank">
+            <div class="slide-number">12</div>
+            <div class="slide-title">Interface vs Type Alias</div>
+            <div class="slide-description">When to use each</div>
+            <span class="badge">Types</span>
+          </a>
+          
+          <a href="module1/slide-12-interface-type-example.html" class="slide-card" target="_blank">
+            <div class="slide-number">13</div>
+            <div class="slide-title">Ví dụ Interface & Type</div>
+            <div class="slide-description">Practical examples</div>
+            <span class="badge">Examples</span>
+          </a>
+          
+          <a href="module1/slide-13-type-inference.html" class="slide-card" target="_blank">
+            <div class="slide-number">14</div>
+            <div class="slide-title">Type Inference</div>
+            <div class="slide-description">Auto type detection</div>
+            <span class="badge">Inference</span>
+          </a>
+          
+          <a href="module1/slide-14-best-practices.html" class="slide-card" target="_blank">
+            <div class="slide-number">15</div>
+            <div class="slide-title">Best Practices</div>
+            <div class="slide-description">Tips & recommendations</div>
+            <span class="badge">Tips</span>
+          </a>
+          
+          <a href="module1/slide-15-summary.html" class="slide-card" target="_blank">
+            <div class="slide-number">16</div>
+            <div class="slide-title">Tóm tắt</div>
+            <div class="slide-description">Module summary</div>
+            <span class="badge">Summary</span>
+          </a>
+          
+          <a href="module1/slide-16-end.html" class="slide-card" target="_blank">
+            <div class="slide-number">17</div>
+            <div class="slide-title">Kết thúc</div>
+            <div class="slide-description">Thank you & next steps</div>
+            <span class="badge">End</span>
+          </a>
+          
+        </div>
+      </div>
+      
+      <!-- Module 02: Functions & Logic Control (Coming Soon) -->
+      <div class="module" style="opacity: 0.6;">
+        <h2 class="module-title">📚 Module 02: Functions & Logic Control</h2>
+        <div style="text-align: center; padding: 40px; color: #64748b;">
+          <svg style="width: 64px; height: 64px; margin: 0 auto 16px; display: block; opacity: 0.5;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <p style="font-size: 18px; font-weight: 600;">Coming Soon...</p>
+          <p style="font-size: 14px; margin-top: 8px;">Slides will be available shortly</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <p>📖 Documentation: <a href="https://typescriptlang.org" style="color: white; text-decoration: underline;">typescriptlang.org</a> | <a href="https://playwright.dev" style="color: white; text-decoration: underline;">playwright.dev</a></p>
+      <p style="margin-top: 8px; font-size: 14px;">© 2026 Awesome Academy - 3E TypeScript & Playwright Course</p>
+    </div>
+  </div>
+</body>
+</html>

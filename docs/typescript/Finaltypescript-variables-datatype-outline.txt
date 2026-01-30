@@ -1,0 +1,2380 @@
+================================================================================
+VARIABLES & DATA TYPES
+TRONG TYPESCRIPT
+Dành cho Playwright Automation Testing
+================================================================================
+
+================================================================================
+MỤC LỤC
+================================================================================
+
+1. Tổng quan TypeScript
+2. Coding Conventions - Quy tắc đặt tên
+3. Khai báo biến: let, const, var
+4. Kiểu dữ liệu cơ bản
+5. Kiểu dữ liệu nâng cao
+6. Type Inference
+7. Best Practices cho Testing
+
+================================================================================
+1. TỔNG QUAN TYPESCRIPT
+================================================================================
+
+🎯 Tại sao QA cần học TypeScript?
+
+✅ Type Safety: Phát hiện lỗi ngay khi code, không phải đợi runtime
+✅ IntelliSense: Auto-complete giúp code nhanh hơn
+✅ Refactoring: Đổi tên, cấu trúc dễ dàng không sợ lỗi
+✅ Team Work: Code rõ ràng, dễ đọc, dễ maintain
+
+💡 Lợi ích trong Automation Testing
+
+// ❌ JavaScript - Khó phát hiện lỗi
+let url = pageUrl;
+console.log(url.toUppercase()); // Lỗi runtime: toUppercase không tồn tại
+
+// ✅ TypeScript - Lỗi ngay khi code
+let url: string = pageUrl;
+console.log(url.toUpperCase()); // IDE gợi ý đúng method
+
+================================================================================
+2. CODING CONVENTIONS - QUY TẮC ĐẶT TÊN
+================================================================================
+
+📌 Nguyên tắc chung
+
+✅ Tên biến phải CÓ Ý NGHĨA, MÔ TẢ rõ mục đích
+✅ Dùng tiếng Anh
+✅ Tránh viết tắt khó hiểu
+✅ Dài hơn một chút nhưng rõ ràng > Ngắn nhưng khó hiểu
+
+--------------------------------------------------------------------------------
+
+📊 Các kiểu Case trong TypeScript
+
++-------------------+------------------+------------------+------------------+
+| Kiểu              | Ví dụ            | Dùng cho         | Convention       |
++-------------------+------------------+------------------+------------------+
+| camelCase         | userName         | Variables        | ✅ Standard      |
+|                   | getUserInfo      | Functions        |                  |
+|                   | isActive         | Methods          |                  |
++-------------------+------------------+------------------+------------------+
+| PascalCase        | UserData         | Classes          | ✅ Standard      |
+|                   | LoginPage        | Interfaces       |                  |
+|                   | BrowserConfig    | Types            |                  |
++-------------------+------------------+------------------+------------------+
+| UPPER_SNAKE_CASE  | MAX_RETRY_COUNT  | Constants        | ✅ Standard      |
+|                   | BASE_URL         | Config values    |                  |
+|                   | DEFAULT_TIMEOUT  | Enum values      |                  |
++-------------------+------------------+------------------+------------------+
+| kebab-case        | user-page.ts     | File names       | ✅ Standard      |
+|                   | login-helper.ts  | Folder names     |                  |
+|                   | test-data.json   | Config files     |                  |
++-------------------+------------------+------------------+------------------+
+
+--------------------------------------------------------------------------------
+
+✅ Ví dụ chi tiết
+
+// 📌 1. camelCase - Variables, Functions, Methods
+let userName = 'John Doe';
+let emailAddress = 'john@example.com';
+let isLoggedIn = false;
+
+function getUserData(id: number) {
+  return { id, name: 'User' };
+}
+
+const validateEmail = (email: string): boolean => {
+  return email.includes('@');
+};
+
+// 📌 2. PascalCase - Classes, Interfaces, Types
+class LoginPage {
+  emailSelector: string;
+  
+  constructor() {
+    this.emailSelector = '#email';
+  }
+}
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+type UserRole = 'admin' | 'user' | 'guest';
+
+// 📌 3. UPPER_SNAKE_CASE - Constants
+const BASE_URL = 'https://example.com';
+const DEFAULT_TIMEOUT = 30000;
+const MAX_RETRY_ATTEMPTS = 3;
+
+const CONFIG = {
+  BASE_URL: 'https://example.com',
+  TIMEOUT: 30000
+} as const;
+
+enum BrowserType {
+  CHROME = 'chrome',
+  FIREFOX = 'firefox',
+  SAFARI = 'safari'
+}
+
+// 📌 4. kebab-case - File Names & Folders
+// ✅ File structure examples:
+// src/
+//   pages/
+//     login-page.ts          ← kebab-case
+//     home-page.ts           ← kebab-case
+//     user-profile-page.ts   ← kebab-case
+//   utils/
+//     string-helper.ts       ← kebab-case
+//     date-formatter.ts      ← kebab-case
+//   config/
+//     test-config.json       ← kebab-case
+//     env-settings.ts        ← kebab-case
+
+// ⚠️ LƯU Ý: Tên file dùng kebab-case, nhưng class/interface bên trong dùng PascalCase
+// File: login-page.ts
+export class LoginPage {  // ← PascalCase
+  // ...
+}
+
+// File: user-helper.ts
+export function getUserById(id: number) {  // ← camelCase
+  // ...
+}
+
+--------------------------------------------------------------------------------
+
+💡 Quy tắc đặt tên cụ thể
+
+✅ Boolean - Bắt đầu với is, has, should, can
+const isVisible = true;
+const hasError = false;
+const shouldRetry = true;
+const canDelete = false;
+
+✅ Array - Dùng số nhiều hoặc suffix 'List'
+const users = ['admin', 'user', 'guest'];
+const emailAddresses = ['user1@test.com', 'user2@test.com'];
+const userList = ['John', 'Jane'];
+
+✅ Function - Bắt đầu với động từ
+function getUserName(id: number): string { }
+function validateEmail(email: string): boolean { }
+function buildUrl(base: string, path: string): string { }
+
+❌ Tránh làm
+const u = 'url';                    // ❌ Quá ngắn
+const usrEmlAddr = 'email';         // ❌ Viết tắt khó hiểu
+const data = { name: 'John' };      // ❌ Tên chung chung
+const nguoiDung = 'user';           // ❌ Tiếng Việt
+
+✅ Nên làm
+const userUrl = 'url';              // ✅ Rõ ràng
+const userEmailAddress = 'email';   // ✅ Đầy đủ
+const userData = { name: 'John' };  // ✅ Cụ thể
+const userName = 'user';            // ✅ Tiếng Anh
+
+================================================================================
+3. KHAI BÁO BIẾN: let, const, var
+================================================================================
+
+📊 BẢNG SO SÁNH
+
++-----------------------+------------------+------------------+------------------+
+| Đặc điểm              | var              | let              | const            |
++-----------------------+------------------+------------------+------------------+
+| Scope                 | Function scope   | Block scope      | Block scope      |
+| Re-assign             | ✅ Có            | ✅ Có            | ❌ Không         |
+| Re-declare            | ✅ Có            | ❌ Không         | ❌ Không         |
+| Hoisting              | ✅ Có            | ❌ Không         | ❌ Không         |
+| Dùng trong Testing    | ⚠️ Không khuyến  | ✅ Cho biến      | ✅ Cho config,   |
+|                       |    khích         |    thay đổi      |    constant      |
++-----------------------+------------------+------------------+------------------+
+
+🎯 Khi nào dùng gì trong Playwright?
+
+✅ Dùng const cho:
+
+// 📌 URLs và Configuration
+const BASE_URL = 'https://example.com';
+const LOGIN_PAGE = '/login';
+const TIMEOUT = 30000;
+
+// 📌 Selectors (không thay đổi)
+const LOGIN_BUTTON_SELECTOR = '#login-button';
+const EMAIL_INPUT_SELECTOR = 'input[type="email"]';
+
+// 📌 Test Data cố định
+const ADMIN_USER = {
+  email: 'admin@example.com',
+  password: 'Admin@123'
+};
+
+✅ Dùng let cho:
+
+// 📌 Biến thay đổi giá trị
+let currentPage: string;
+let isLoggedIn = false;
+let retryCount = 0;
+
+// 📌 Dữ liệu động
+let username: string;
+let responseStatus: number;
+
+// 📌 Loop và iteration
+let users = ['admin', 'user', 'guest'];
+for (let i = 0; i < users.length; i++) {
+  console.log(users[i]);
+}
+
+⚠️ TRÁNH dùng var:
+
+// ❌ KHÔNG DÙNG - Function scope gây confusion
+var globalVar = 'test';
+
+// ✅ DÙNG - Block scope rõ ràng
+const testData = 'test';
+
+💡 Ví dụ thực tế
+
+// ✅ const - Config không đổi
+const BASE_URL = 'https://app.example.com';
+const LOGIN_PAGE = '/login';
+const DASHBOARD_PAGE = '/dashboard';
+
+// ✅ const - Selectors không đổi
+const EMAIL_SELECTOR = '#email';
+const PASSWORD_SELECTOR = '#password';
+const SUBMIT_BUTTON = 'button[type="submit"]';
+
+// ✅ let - Biến thay đổi
+let currentPage: string;
+let isAuthenticated = false;
+
+// Sử dụng
+currentPage = BASE_URL + LOGIN_PAGE;
+console.log('Navigating to:', currentPage);
+
+// Sau khi login
+currentPage = BASE_URL + DASHBOARD_PAGE;
+isAuthenticated = true;
+
+================================================================================
+3. KIỂU DỮ LIỆU CƠ BẢN
+================================================================================
+
+🔤 String - Text, URLs và Selectors
+
+// 📌 URLs và Pages
+const BASE_URL: string = 'https://example.com';
+const HOME_PAGE: string = '/home';
+const LOGIN_PAGE: string = '/login';
+
+// 📌 Selectors
+const LOGIN_BUTTON: string = '#login-btn';
+const EMAIL_INPUT: string = 'input[name="email"]';
+const ERROR_MESSAGE: string = '.error-message';
+
+// 📌 User Data
+const USER_NAME: string = 'John Doe';
+const USER_EMAIL: string = 'john@example.com';
+
+// 📌 Template Literals (String nối động)
+let userId = '12345';
+let dynamicSelector = `[data-test-id="${userId}"]`;
+let fullURL = `${BASE_URL}${HOME_PAGE}`;
+
+console.log(fullURL); // Output: https://example.com/home
+
+🔢 Number - Timeouts, Counts và Status Codes
+
+// 📌 Timeouts và Delays
+const SHORT_TIMEOUT: number = 5000;    // 5 giây
+const LONG_TIMEOUT: number = 30000;    // 30 giây
+const RETRY_COUNT: number = 3;
+
+// 📌 Counts và Index
+const MAX_ITEMS: number = 10;
+const CURRENT_PAGE: number = 1;
+const TOTAL_PAGES: number = 5;
+
+// 📌 HTTP Status Codes
+const SUCCESS_CODE: number = 200;
+const NOT_FOUND: number = 404;
+const SERVER_ERROR: number = 500;
+
+// 📌 Ví dụ sử dụng
+let waitTime = SHORT_TIMEOUT;
+let pageIndex = CURRENT_PAGE - 1; // 0-based index
+
+✔️ Boolean - Flags và Conditions
+
+// 📌 State Flags
+let isLoggedIn: boolean = false;
+let isPageLoaded: boolean = true;
+let hasError: boolean = false;
+
+// 📌 Configuration Flags
+const ENABLE_HEADLESS: boolean = true;
+const ENABLE_SCREENSHOTS: boolean = false;
+
+// 📌 Ví dụ sử dụng
+if (isLoggedIn) {
+  console.log('User is authenticated');
+} else {
+  console.log('Please login first');
+}
+
+// Thay đổi state
+isLoggedIn = true;
+hasError = false;
+
+📦 Array - Danh sách và Collections
+
+// 📌 Danh sách Users
+const userRoles: string[] = ['admin', 'user', 'guest'];
+const validEmails: string[] = [
+  'user1@example.com',
+  'user2@example.com',
+  'user3@example.com'
+];
+
+// 📌 Cách khai báo khác
+const browsers: Array<string> = ['Chrome', 'Firefox', 'Safari'];
+
+// 📌 Danh sách Selectors
+const menuSelectors: string[] = [
+  'a[href="/home"]',
+  'a[href="/products"]',
+  'a[href="/contact"]'
+];
+
+// 📌 Danh sách Numbers
+const pageSizes: number[] = [10, 20, 50, 100];
+
+// 📌 Sử dụng với Loop
+for (let i = 0; i < userRoles.length; i++) {
+  console.log(`Role ${i + 1}: ${userRoles[i]}`);
+}
+
+// Hoặc dùng for...of
+for (const role of userRoles) {
+  console.log('User role:', role);
+}
+
+================================================================================
+4. KIỂU DỮ LIỆU NÂNG CAO
+================================================================================
+
+🔄 any vs unknown
+
+📊 BẢNG SO SÁNH
+
++-----------------------+------------------+------------------+
+| Đặc điểm              | any              | unknown          |
++-----------------------+------------------+------------------+
+| Type Checking         | ❌ Tắt hoàn toàn | ✅ Bật type      |
+|                       |                  |    checking      |
+| Assign to other types | ✅ Tự do         | ❌ Phải type     |
+|                       |                  |    check trước   |
+| Type Safety           | ❌ Không an toàn | ✅ An toàn       |
+| Khi nào dùng          | ⚠️ Tình huống    | ✅ Khi không     |
+|                       |    đặc biệt      |    biết type     |
+| Best Practice         | ❌ Tránh dùng    | ✅ Ưu tiên dùng  |
++-----------------------+------------------+------------------+
+
+🎯 Khi nào dùng any?
+
+// ⚠️ Dùng any khi:
+// 1. Migration từ JavaScript sang TypeScript
+// 2. External library không có types
+// 3. Data structure quá phức tạp (tạm thời)
+
+// ❌ VÍ DỤ XẤU - Lạm dụng any
+let pageData: any;
+pageData = { url: 'test', status: 200 };
+console.log(pageData.notExist.value); // Không báo lỗi nhưng sẽ crash!
+
+// ⚠️ CHẤP NHẬN ĐƯỢC - Third-party library
+let externalLib: any = require('legacy-library');
+
+✅ Khi nào dùng unknown?
+
+// ✅ Dùng unknown khi nhận data không rõ ràng
+
+// 📌 Dữ liệu từ external source
+let externalData: unknown;
+
+// Giả sử nhận data từ API hoặc file
+externalData = JSON.parse('{"url": "https://example.com", "status": 200}');
+
+// ✅ Phải type check trước khi dùng
+if (typeof externalData === 'object' && externalData !== null) {
+  const data = externalData as { url: string; status: number };
+  console.log('URL:', data.url);
+  console.log('Status:', data.status);
+}
+
+// 📌 Error Handling
+try {
+  // some operation
+  throw new Error('Something went wrong');
+} catch (error: unknown) {
+  // ✅ Best practice - kiểm tra trước khi dùng
+  if (error instanceof Error) {
+    console.error('Error message:', error.message);
+  }
+}
+
+💡 So sánh thực tế
+
+// ❌ Dùng any - Không an toàn
+function getPageUrl(pageData: any) {
+  return pageData.url.value; // Không báo lỗi nếu sai cấu trúc
+}
+
+// ✅ Dùng unknown - An toàn
+function getPageUrlSafe(pageData: unknown): string {
+  // Kiểm tra từng bước
+  if (
+    typeof pageData === 'object' && 
+    pageData !== null && 
+    'url' in pageData
+  ) {
+    const data = pageData as { url: string };
+    return data.url;
+  }
+  throw new Error('Invalid page data structure');
+}
+
+// Sử dụng
+let data: unknown = { url: 'https://example.com' };
+console.log(getPageUrlSafe(data)); // An toàn
+
+--------------------------------------------------------------------------------
+
+🎭 Tuple - Cặp dữ liệu có thứ tự
+
+// 📌 Định nghĩa: Array với length cố định và type cụ thể cho mỗi phần tử
+
+// ✅ Ví dụ cơ bản
+type Coordinate = [number, number]; // [x, y]
+const clickPosition: Coordinate = [100, 200];
+
+type UserCredentials = [string, string]; // [username, password]
+const adminUser: UserCredentials = ['admin', 'Admin@123'];
+
+type PageInfo = [string, number, boolean]; // [pageName, loadTime, isLoaded]
+const homePageInfo: PageInfo = ['Home', 1500, true];
+
+// 📌 Ứng dụng thực tế
+type SelectorConfig = [string, number]; // [selector, timeout]
+const buttonConfig: SelectorConfig = ['#submit-btn', 5000];
+const loadingConfig: SelectorConfig = ['.loading-spinner', 30000];
+
+// Danh sách configs
+const allConfigs: SelectorConfig[] = [
+  ['#login-button', 5000],
+  ['.modal-popup', 10000],
+  ['[data-test="confirm"]', 3000]
+];
+
+// Sử dụng
+allConfigs.forEach(([selector, timeout]) => {
+  console.log(`Selector: ${selector}, Timeout: ${timeout}ms`);
+});
+
+--------------------------------------------------------------------------------
+
+📊 SO SÁNH: ARRAY vs TUPLE
+
++--------------------------+-------------------------+-------------------------+
+| Đặc điểm                 | Array                   | Tuple                   |
++--------------------------+-------------------------+-------------------------+
+| Độ dài                   | ✅ Linh hoạt            | ❌ Cố định              |
+| Kiểu dữ liệu             | ✅ Đồng nhất            | ✅ Có thể khác nhau     |
+|                          | (cùng type)             | cho mỗi vị trí          |
+| Thứ tự                   | ⚠️ Không quan trọng     | ✅ Rất quan trọng       |
+| Type Safety              | ✅ Cho tất cả phần tử   | ✅ Cho từng vị trí      |
+| Flexibility              | ✅ Cao (add/remove)     | ❌ Thấp (fixed length)  |
+| Use Case                 | ✅ Danh sách items      | ✅ Cặp giá trị liên     |
+|                          | cùng loại               | quan có thứ tự          |
++--------------------------+-------------------------+-------------------------+
+
+🎯 Khi nào dùng Array?
+
+// ✅ Dùng ARRAY khi:
+// 1. Số lượng phần tử không cố định
+// 2. Tất cả phần tử cùng kiểu dữ liệu
+// 3. Thứ tự không quan trọng về mặt ngữ nghĩa
+
+// 📌 Danh sách users (số lượng thay đổi)
+const users: string[] = ['admin', 'user1', 'user2'];
+users.push('user3'); // ✅ OK - có thể thêm
+
+// 📌 Danh sách test data
+const testEmails: string[] = [
+  'test1@example.com',
+  'test2@example.com',
+  'test3@example.com'
+];
+
+// 📌 Danh sách selectors
+const menuSelectors: string[] = [
+  'a[href="/home"]',
+  'a[href="/products"]',
+  'a[href="/contact"]'
+];
+
+// ✅ Tất cả phần tử đều là string
+// ✅ Có thể có bất kỳ số lượng nào
+// ✅ Thứ tự có thể thay đổi
+
+🎯 Khi nào dùng Tuple?
+
+// ✅ Dùng TUPLE khi:
+// 1. Số lượng phần tử cố định
+// 2. Mỗi vị trí có ý nghĩa và type riêng
+// 3. Thứ tự quan trọng
+
+// 📌 Tọa độ [x, y] - luôn 2 số
+type Point = [number, number];
+const mouseClick: Point = [150, 300];
+// mouseClick.push(100); // ❌ Error - không thể thêm phần tử thứ 3
+
+// 📌 Login credentials [username, password] - luôn 2 string
+type Credentials = [string, string];
+const userLogin: Credentials = ['admin', 'Admin@123'];
+
+// 📌 API Response [status, message, data] - 3 phần tử với type khác nhau
+type ApiResult = [number, string, boolean];
+const loginResult: ApiResult = [200, 'Success', true];
+//                                ↑     ↑        ↑
+//                              number string  boolean
+
+// 📌 Element Config [selector, timeout, required] - ý nghĩa rõ ràng
+type ElementConfig = [string, number, boolean];
+const emailInput: ElementConfig = ['#email', 5000, true];
+const phoneInput: ElementConfig = ['#phone', 3000, false];
+
+// ✅ Mỗi vị trí có ý nghĩa cụ thể
+// ✅ Type khác nhau cho mỗi vị trí
+// ✅ Số lượng cố định
+
+💡 Ví dụ thực tế so sánh
+
+// ❌ ARRAY - Không phù hợp cho dữ liệu có ý nghĩa khác nhau
+const userData: any[] = ['John Doe', 25, 'john@example.com', true];
+// ⚠️ Vấn đề: Không biết vị trí nào là gì, type checking yếu
+
+// ✅ TUPLE - Phù hợp cho dữ liệu có cấu trúc
+type UserInfo = [string, number, string, boolean]; // [name, age, email, isActive]
+const user: UserInfo = ['John Doe', 25, 'john@example.com', true];
+
+// Destructuring với tên rõ ràng
+const [userName, userAge, userEmail, isActive] = user;
+console.log(`${userName} (${userAge}) - ${userEmail} - Active: ${isActive}`);
+
+// 📌 So sánh với Test Data
+
+// ❌ ARRAY - Khó maintain
+const testData1: any[] = ['https://example.com', 30000, true, 'chrome'];
+const testData2: any[] = ['https://test.com', 15000, false, 'firefox'];
+// ⚠️ Không rõ ràng từng giá trị là gì
+
+// ✅ TUPLE - Rõ ràng, type-safe
+type TestConfig = [string, number, boolean, string]; // [url, timeout, headless, browser]
+const config1: TestConfig = ['https://example.com', 30000, true, 'chrome'];
+const config2: TestConfig = ['https://test.com', 15000, false, 'firefox'];
+
+// Sử dụng
+function runTest(config: TestConfig): void {
+  const [url, timeout, headless, browser] = config;
+  console.log(`Testing ${url} on ${browser}`);
+  console.log(`Timeout: ${timeout}ms, Headless: ${headless}`);
+}
+
+runTest(config1);
+
+// 📌 Tuple với Optional và Rest Elements
+
+// Optional elements
+type OptionalTuple = [string, number, boolean?]; // boolean là optional
+const data1: OptionalTuple = ['test', 100, true];
+const data2: OptionalTuple = ['test', 100]; // ✅ OK - boolean optional
+
+// Rest elements
+type StringNumberPairs = [string, ...number[]]; // string + nhiều numbers
+const pair1: StringNumberPairs = ['label', 1, 2, 3];
+const pair2: StringNumberPairs = ['label', 10];
+
+🎯 Best Practice: Array vs Tuple
+
+✅ Dùng Array khi:
+- Danh sách items cùng loại (users, products, selectors)
+- Số lượng không xác định hoặc thay đổi
+- Cần thao tác thêm/xóa phần tử
+
+✅ Dùng Tuple khi:
+- Cặp/nhóm giá trị có ý nghĩa cố định (coordinates, credentials)
+- Mỗi vị trí có type và ý nghĩa riêng
+- Số lượng phần tử xác định
+- Cần type safety cho từng vị trí
+
+--------------------------------------------------------------------------------
+
+🔷 Object: Interface vs Type Alias
+
+📊 BẢNG SO SÁNH CHI TIẾT
+
++----------------------+--------------------+--------------------+
+| Đặc điểm             | interface          | type               |
++----------------------+--------------------+--------------------+
+| Mở rộng              | extends keyword    | & (intersection)   |
+| Declaration Merging  | ✅ Có              | ❌ Không           |
+| Union Types          | ❌ Không           | ✅ Có              |
+| Primitives/Tuples    | ❌ Không           | ✅ Có              |
+| Computed Properties  | ❌ Không           | ✅ Có              |
+| Performance          | ✅ Tốt hơn         | ⚠️ Chậm hơn chút   |
+|                      | (caching)          |                    |
+| Dùng cho             | ✅ Object shapes,  | ✅ Unions, Tuples, |
+|                      | Classes            | Complex            |
+| Best Practice        | ✅ Public APIs,    | ✅ Complex types,  |
+|                      | OOP patterns       | Utilities          |
+| Re-open/Extend       | ✅ Có thể (merge)  | ❌ Không           |
+| implements (Class)   | ✅ Có              | ✅ Có              |
+| Mapped Types         | ❌ Không           | ✅ Có              |
++----------------------+--------------------+--------------------+
+
+🎯 INTERFACE - Đặc điểm và Ứng dụng
+
+✅ Điểm mạnh của Interface:
+
+1. Declaration Merging (Tự động gộp khai báo)
+2. extends keyword rõ ràng cho OOP
+3. Performance tốt hơn (TypeScript cache tốt hơn)
+4. Dễ đọc cho object structure
+5. Tốt cho public APIs và libraries
+
+❌ Hạn chế của Interface:
+
+1. Không thể tạo Union types
+2. Không thể alias primitives hoặc tuples
+3. Không hỗ trợ mapped types hoặc conditional types
+
+🎯 Khi nào dùng Interface?
+
+// ✅ DÙNG INTERFACE khi:
+// 1. Định nghĩa object structure
+// 2. Có thể extend trong tương lai
+// 3. Làm việc với OOP/Classes
+// 4. Tạo public APIs cho libraries
+
+// 📌 VÍ DỤ 1: Page Object Model trong Playwright
+
+interface BasePage {
+  url: string;
+  title: string;
+  timeout: number;
+}
+
+interface NavigationMethods {
+  navigate(): Promise<void>;
+  waitForLoad(): Promise<void>;
+  getTitle(): Promise<string>;
+}
+
+// Kết hợp interfaces
+interface Page extends BasePage, NavigationMethods {
+  selectors: Record<string, string>;
+}
+
+// Sử dụng
+const loginPage: Page = {
+  url: 'https://example.com/login',
+  title: 'Login Page',
+  timeout: 5000,
+  selectors: {
+    email: '#email',
+    password: '#password',
+    submit: 'button[type="submit"]'
+  },
+  async navigate() {
+    console.log(`Navigating to ${this.url}`);
+  },
+  async waitForLoad() {
+    console.log('Waiting for page load...');
+  },
+  async getTitle() {
+    return this.title;
+  }
+};
+
+// 📌 VÍ DỤ 2: User Data Structure
+
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  role: 'admin' | 'user' | 'guest';
+}
+
+interface UserProfile {
+  bio: string;
+  avatar: string;
+  website?: string; // Optional property
+}
+
+interface UserSettings {
+  theme: 'light' | 'dark';
+  language: string;
+  notifications: boolean;
+}
+
+// ✅ Extending Interface - Mở rộng
+interface CompleteUser extends User, UserProfile, UserSettings {
+  createdAt: Date;
+  lastLogin: Date;
+}
+
+const fullUser: CompleteUser = {
+  // User properties
+  id: 1,
+  username: 'johndoe',
+  email: 'john@example.com',
+  role: 'admin',
+  // UserProfile properties
+  bio: 'Software Tester',
+  avatar: 'avatar.jpg',
+  website: 'https://johndoe.com',
+  // UserSettings properties
+  theme: 'dark',
+  language: 'en',
+  notifications: true,
+  // CompleteUser properties
+  createdAt: new Date('2024-01-01'),
+  lastLogin: new Date()
+};
+
+// 📌 VÍ DỤ 3: Test Configuration
+
+interface BaseConfig {
+  baseURL: string;
+  timeout: number;
+  retries: number;
+}
+
+interface BrowserConfig {
+  headless: boolean;
+  viewport: {
+    width: number;
+    height: number;
+  };
+  slowMo?: number;
+}
+
+interface TestConfig extends BaseConfig, BrowserConfig {
+  testDir: string;
+  screenshots: boolean;
+  video: boolean;
+}
+
+const config: TestConfig = {
+  // BaseConfig
+  baseURL: 'https://example.com',
+  timeout: 30000,
+  retries: 2,
+  // BrowserConfig
+  headless: true,
+  viewport: {
+    width: 1920,
+    height: 1080
+  },
+  slowMo: 100,
+  // TestConfig
+  testDir: './tests',
+  screenshots: true,
+  video: false
+};
+
+// 📌 VÍ DỤ 4: API Response Interface
+
+interface BaseResponse {
+  status: number;
+  message: string;
+  timestamp: Date;
+}
+
+interface SuccessResponse<T> extends BaseResponse {
+  data: T;
+}
+
+interface ErrorResponse extends BaseResponse {
+  error: {
+    code: string;
+    details: string;
+  };
+}
+
+// Sử dụng với generic
+interface UserData {
+  id: number;
+  name: string;
+  email: string;
+}
+
+const successResponse: SuccessResponse<UserData> = {
+  status: 200,
+  message: 'Success',
+  timestamp: new Date(),
+  data: {
+    id: 1,
+    name: 'John',
+    email: 'john@example.com'
+  }
+};
+
+const errorResponse: ErrorResponse = {
+  status: 404,
+  message: 'Not Found',
+  timestamp: new Date(),
+  error: {
+    code: 'USER_NOT_FOUND',
+    details: 'User with ID 999 does not exist'
+  }
+};
+
+// 📌 VÍ DỤ 5: Interface với Methods (Function signatures)
+
+interface Validator {
+  validate(value: string): boolean;
+  getErrorMessage(): string;
+}
+
+interface EmailValidator extends Validator {
+  checkDomain(domain: string): boolean;
+}
+
+// Implementation
+const emailValidator: EmailValidator = {
+  validate(value: string): boolean {
+    return value.includes('@') && value.includes('.');
+  },
+  getErrorMessage(): string {
+    return 'Invalid email format';
+  },
+  checkDomain(domain: string): boolean {
+    const allowedDomains = ['gmail.com', 'yahoo.com', 'outlook.com'];
+    return allowedDomains.includes(domain);
+  }
+};
+
+// Sử dụng
+const email = 'test@gmail.com';
+if (emailValidator.validate(email)) {
+  console.log('Email is valid');
+} else {
+  console.log(emailValidator.getErrorMessage());
+}
+
+// 📌 VÍ DỤ 6: Interface với Index Signature (Dynamic properties)
+
+interface StringDictionary {
+  [key: string]: string;
+}
+
+const selectors: StringDictionary = {
+  loginButton: '#login',
+  emailInput: 'input[type="email"]',
+  passwordInput: 'input[type="password"]',
+  submitButton: 'button[type="submit"]'
+};
+
+// Có thể thêm động
+selectors.newSelector = '#new-element';
+
+interface NumberDictionary {
+  [index: string]: number;
+}
+
+const timeouts: NumberDictionary = {
+  short: 5000,
+  medium: 15000,
+  long: 30000
+};
+
+// 📌 VÍ DỤ 7: Interface với Readonly và Optional
+
+interface Product {
+  readonly id: number;          // Readonly - không thể thay đổi
+  name: string;
+  price: number;
+  description?: string;         // Optional
+  readonly createdAt: Date;     // Readonly
+  stock?: number;               // Optional
+}
+
+const product: Product = {
+  id: 101,
+  name: 'Laptop',
+  price: 999.99,
+  description: 'High-performance laptop',
+  createdAt: new Date()
+};
+
+// product.id = 102;           // ❌ Error - readonly
+product.price = 899.99;        // ✅ OK
+product.stock = 50;            // ✅ OK - optional có thể set
+
+// 📌 VÍ DỤ 8: Interface cho Class Implementation
+
+interface ILogger {
+  log(message: string): void;
+  error(message: string): void;
+  warn(message: string): void;
+}
+
+class ConsoleLogger implements ILogger {
+  log(message: string): void {
+    console.log(`[LOG] ${message}`);
+  }
+
+  error(message: string): void {
+    console.error(`[ERROR] ${message}`);
+  }
+
+  warn(message: string): void {
+    console.warn(`[WARN] ${message}`);
+  }
+}
+
+class FileLogger implements ILogger {
+  private logFile: string;
+
+  constructor(logFile: string) {
+    this.logFile = logFile;
+  }
+
+  log(message: string): void {
+    console.log(`Writing to ${this.logFile}: [LOG] ${message}`);
+  }
+
+  error(message: string): void {
+    console.log(`Writing to ${this.logFile}: [ERROR] ${message}`);
+  }
+
+  warn(message: string): void {
+    console.log(`Writing to ${this.logFile}: [WARN] ${message}`);
+  }
+}
+
+// Sử dụng
+const logger: ILogger = new ConsoleLogger();
+logger.log('Test started');
+logger.error('Test failed');
+
+const fileLogger: ILogger = new FileLogger('test.log');
+fileLogger.log('Logging to file');
+
+// 📌 VÍ DỤ 9: ✅ Declaration Merging (Tính năng đặc biệt của Interface)
+
+// Khai báo lần 1
+interface BrowserConfig {
+  name: string;
+  headless: boolean;
+}
+
+// Khai báo lần 2 - TỰ ĐỘNG GỘP với lần 1
+interface BrowserConfig {
+  timeout: number;
+  viewport: { width: number; height: number };
+}
+
+// Kết quả: BrowserConfig có TẤT CẢ properties
+const browser: BrowserConfig = {
+  name: 'Chrome',
+  headless: true,
+  timeout: 30000,
+  viewport: { width: 1920, height: 1080 }
+};
+
+// ⚠️ Lưu ý: TYPE KHÔNG LÀM ĐƯỢC điều này
+// type BrowserType = { name: string };
+// type BrowserType = { timeout: number }; // ❌ Error: Duplicate identifier
+
+// 📌 VÍ DỤ 10: Interface với Generic Types
+
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  timestamp: Date;
+}
+
+interface User {
+  id: number;
+  name: string;
+}
+
+interface Product {
+  sku: string;
+  name: string;
+  price: number;
+}
+
+const userResponse: ApiResponse<User> = {
+  success: true,
+  data: { id: 1, name: 'John' },
+  timestamp: new Date()
+};
+
+const productResponse: ApiResponse<Product> = {
+  success: true,
+  data: { sku: 'ABC123', name: 'Laptop', price: 999 },
+  timestamp: new Date()
+};
+
+const usersListResponse: ApiResponse<User[]> = {
+  success: true,
+  data: [
+    { id: 1, name: 'John' },
+    { id: 2, name: 'Jane' }
+  ],
+  timestamp: new Date()
+};
+
+🎯 Khi nào dùng Type Alias?
+
+// ✅ DÙNG TYPE khi:
+// 1. Unions và Intersections
+// 2. Tuples
+// 3. Mapped types, Conditional types
+// 4. Aliases cho primitives
+// 5. Complex type compositions
+
+✅ Điểm mạnh của Type:
+
+1. Hỗ trợ Union types (interface KHÔNG làm được)
+2. Có thể alias bất kỳ type nào (primitives, tuples, etc.)
+3. Mapped types và Conditional types
+4. Computed properties
+5. Linh hoạt hơn cho complex type logic
+
+❌ Hạn chế của Type:
+
+1. Không có Declaration Merging
+2. Performance chậm hơn một chút
+3. Error messages đôi khi khó đọc hơn
+
+// 📌 VÍ DỤ 1: Union Types (Interface KHÔNG LÀM ĐƯỢC)
+type PageStatus = 'loading' | 'loaded' | 'error';
+type BrowserName = 'Chrome' | 'Firefox' | 'Safari';
+type UserRole = 'admin' | 'user' | 'guest';
+
+let currentStatus: PageStatus = 'loading';
+currentStatus = 'loaded'; // ✅ OK
+// currentStatus = 'invalid'; // ❌ Error: không hợp lệ
+
+// 📌 VÍ DỤ 2: Primitive Aliases
+type UserId = number;
+type Email = string;
+type Timestamp = number;
+
+const id: UserId = 12345;
+const userEmail: Email = 'user@example.com';
+const createdAt: Timestamp = Date.now();
+
+// 📌 VÍ DỤ 3: Intersection Types (Kết hợp nhiều types)
+type Timestamped = {
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type User = {
+  id: number;
+  name: string;
+};
+
+type UserWithTimestamp = User & Timestamped;
+
+const user: UserWithTimestamp = {
+  id: 1,
+  name: 'John',
+  createdAt: new Date(),
+  updatedAt: new Date()
+};
+
+// 📌 VÍ DỤ 4: Tuples
+type Credentials = [string, string]; // [username, password]
+type Point = [number, number]; // [x, y]
+type RGB = [number, number, number]; // [red, green, blue]
+
+const loginCreds: Credentials = ['admin', 'Admin@123'];
+const mousePos: Point = [150, 200];
+const color: RGB = [255, 128, 0];
+
+// 📌 VÍ DỤ 5: Function Types
+type StringValidator = (value: string) => boolean;
+type PageNavigator = (url: string) => Promise<void>;
+type ErrorHandler = (error: Error) => void;
+
+const validateEmail: StringValidator = (email) => {
+  return email.includes('@');
+};
+
+const navigateToPage: PageNavigator = async (url) => {
+  console.log(`Navigating to ${url}`);
+};
+
+const handleError: ErrorHandler = (error) => {
+  console.error('Error:', error.message);
+};
+
+// 📌 VÍ DỤ 6: Discriminated Unions (Tagged Unions)
+type SuccessResult = {
+  status: 'success';
+  data: string;
+};
+
+type ErrorResult = {
+  status: 'error';
+  errorMessage: string;
+  errorCode: number;
+};
+
+type PendingResult = {
+  status: 'pending';
+  progress: number;
+};
+
+type ApiResult = SuccessResult | ErrorResult | PendingResult;
+
+function handleResult(result: ApiResult): void {
+  switch (result.status) {
+    case 'success':
+      console.log('Data:', result.data);
+      break;
+    case 'error':
+      console.log(`Error ${result.errorCode}: ${result.errorMessage}`);
+      break;
+    case 'pending':
+      console.log(`Progress: ${result.progress}%`);
+      break;
+  }
+}
+
+// Sử dụng
+handleResult({ status: 'success', data: 'User loaded' });
+handleResult({ status: 'error', errorMessage: 'Not found', errorCode: 404 });
+handleResult({ status: 'pending', progress: 75 });
+
+// 📌 VÍ DỤ 7: Union of Multiple Types
+type StringOrNumber = string | number;
+type ID = string | number;
+type ResponseData = string | number | boolean | null;
+
+let value: StringOrNumber;
+value = 'hello';    // ✅ OK
+value = 123;        // ✅ OK
+
+let userId: ID;
+userId = 'user_123';  // ✅ OK
+userId = 12345;       // ✅ OK
+
+// 📌 VÍ DỤ 8: Mapped Types (Type transformation)
+type User = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+// Make all properties optional
+type PartialUser = {
+  [K in keyof User]?: User[K];
+};
+
+// Make all properties readonly
+type ReadonlyUser = {
+  readonly [K in keyof User]: User[K];
+};
+
+const partialUser: PartialUser = {
+  id: 1
+  // name và email optional
+};
+
+const readonlyUser: ReadonlyUser = {
+  id: 1,
+  name: 'John',
+  email: 'john@example.com'
+};
+// readonlyUser.name = 'Jane'; // ❌ Error: readonly
+
+// 📌 VÍ DỤ 9: Conditional Types
+type IsString<T> = T extends string ? 'yes' : 'no';
+
+type Test1 = IsString<string>;  // 'yes'
+type Test2 = IsString<number>;  // 'no'
+
+// Practical example
+type NonNullable<T> = T extends null | undefined ? never : T;
+
+type A = NonNullable<string | null>;      // string
+type B = NonNullable<number | undefined>; // number
+
+// 📌 VÍ DỤ 10: Utility Types với Type Alias
+type Product = {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  stock: number;
+};
+
+// Partial - All properties optional
+type PartialProduct = Partial<Product>;
+
+// Pick - Select specific properties
+type ProductSummary = Pick<Product, 'id' | 'name' | 'price'>;
+
+// Omit - Exclude specific properties
+type ProductWithoutStock = Omit<Product, 'stock'>;
+
+// Required - All properties required
+type RequiredProduct = Required<Product>;
+
+// Readonly - All properties readonly
+type ReadonlyProduct = Readonly<Product>;
+
+// Record - Create object type
+type ProductCategories = Record<'electronics' | 'clothing' | 'food', Product[]>;
+
+const categories: ProductCategories = {
+  electronics: [
+    { id: 1, name: 'Laptop', price: 999, description: 'High-end laptop', stock: 10 }
+  ],
+  clothing: [
+    { id: 2, name: 'T-Shirt', price: 20, description: 'Cotton t-shirt', stock: 100 }
+  ],
+  food: [
+    { id: 3, name: 'Apple', price: 1, description: 'Fresh apple', stock: 500 }
+  ]
+};
+
+--------------------------------------------------------------------------------
+
+� SO SÁNH TOÀN DIỆN: INTERFACE vs TYPE
+
+🎯 KHI NÀO DÙNG GÌ?
+
+┌────────────────────────────────────────────────────────────────────┐
+│                     DÙNG INTERFACE KHI:                            │
+├────────────────────────────────────────────────────────────────────┤
+│ ✅ Định nghĩa object structures                                    │
+│ ✅ Làm việc với Classes và OOP                                     │
+│ ✅ Public APIs hoặc library code                                   │
+│ ✅ Cần extends với keyword rõ ràng                                 │
+│ ✅ Cần Declaration Merging                                         │
+│ ✅ Performance quan trọng (large codebase)                         │
+└────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────┐
+│                       DÙNG TYPE KHI:                               │
+├────────────────────────────────────────────────────────────────────┤
+│ ✅ Cần Union types (A | B)                                         │
+│ ✅ Cần alias primitives (type ID = number)                         │
+│ ✅ Cần Tuples ([string, number])                                   │
+│ ✅ Cần Mapped hoặc Conditional types                               │
+│ ✅ Complex type composition                                        │
+│ ✅ Utility types (Pick, Omit, Partial, etc.)                       │
+└────────────────────────────────────────────────────────────────────┘
+
+💡 VÍ DỤ SO SÁNH THỰC TẾ
+
+// ========================================
+// ❌ INTERFACE - Không thể làm những việc sau
+// ========================================
+
+// ❌ Union types
+// interface Status = 'loading' | 'loaded'; // ❌ Syntax Error
+
+// ❌ Tuple types
+// interface Point = [number, number]; // ❌ Syntax Error
+
+// ❌ Primitive aliases
+// interface UserId = number; // ❌ Syntax Error
+
+// ========================================
+// ✅ TYPE - Làm được tất cả
+// ========================================
+
+// ✅ Union types
+type Status = 'loading' | 'loaded' | 'error';
+
+// ✅ Tuple types
+type Point = [number, number];
+
+// ✅ Primitive aliases
+type UserId = number;
+type Email = string;
+
+// ========================================
+// ✅ INTERFACE - Tốt cho Object Structure
+// ========================================
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+interface Admin extends User {
+  permissions: string[];
+}
+
+// ✅ Declaration Merging
+interface Config {
+  timeout: number;
+}
+interface Config {
+  retries: number;
+}
+// Kết quả: Config có cả timeout và retries
+
+// ========================================
+// ✅ TYPE - Tốt cho Complex Composition
+// ========================================
+
+type User = {
+  id: number;
+  name: string;
+};
+
+type Admin = User & {
+  permissions: string[];
+};
+
+// Union of objects
+type Result = 
+  | { status: 'success'; data: string }
+  | { status: 'error'; message: string };
+
+// ========================================
+// 🎯 Best Practice: KẾT HỢP CẢ HAI
+// ========================================
+
+// ✅ Interface cho object shapes
+interface PageConfig {
+  url: string;
+  title: string;
+  timeout: number;
+}
+
+interface UserData {
+  id: number;
+  name: string;
+  email: string;
+}
+
+// ✅ Type cho unions, status
+type PageStatus = 'loading' | 'loaded' | 'error';
+type UserRole = 'admin' | 'user' | 'guest';
+type BrowserType = 'chrome' | 'firefox' | 'safari';
+
+// ✅ Kết hợp Interface và Type
+interface User extends UserData {
+  role: UserRole;        // Type dùng trong Interface
+  status: PageStatus;    // Type dùng trong Interface
+}
+
+const admin: User = {
+  id: 1,
+  name: 'Admin',
+  email: 'admin@example.com',
+  role: 'admin',
+  status: 'loaded'
+};
+
+// ✅ Union of Interfaces
+type SearchResult = PageConfig | UserData;
+
+let result: SearchResult;
+result = { url: '/home', title: 'Home', timeout: 5000 };
+result = { id: 1, name: 'John', email: 'john@example.com' };
+
+// ========================================
+// 📊 BẢNG SO SÁNH CÚ PHÁP
+// ========================================
+
+// EXTENDING/INTERSECTING
+
+// Interface extends
+interface A { x: number; }
+interface B extends A { y: number; }
+
+// Type intersection
+type A = { x: number; };
+type B = A & { y: number; };
+
+// IMPLEMENTING IN CLASS
+
+// Interface
+interface ILogger {
+  log(msg: string): void;
+}
+class Logger implements ILogger {
+  log(msg: string): void {
+    console.log(msg);
+  }
+}
+
+// Type
+type ILogger = {
+  log(msg: string): void;
+};
+class Logger implements ILogger {
+  log(msg: string): void {
+    console.log(msg);
+  }
+}
+
+// ⚠️ CHÚ Ý: CẢ HAI ĐỀU CÓ THỂ DÙNG VỚI CLASSES
+
+// ========================================
+// 🎯 QUYẾT ĐỊNH NHANH
+// ========================================
+
+/*
+CÂU HỎI                           DÙNG GÌ?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Có phải object structure?        → interface
+Có phải union (A | B)?           → type
+Có phải tuple ([x, y])?          → type
+Có phải primitive alias?         → type
+Cần extends trong tương lai?     → interface
+Cần declaration merging?         → interface
+Làm việc với Classes?            → interface
+Cần mapped/conditional types?    → type
+Public API/Library?              → interface
+Internal complex types?          → type
+*/
+
+// ========================================
+// ✅ PATTERN KHUYẾN NGHỊ CHO PLAYWRIGHT
+// ========================================
+
+// 📌 1. Page Objects - Dùng INTERFACE
+interface LoginPage {
+  url: string;
+  emailSelector: string;
+  passwordSelector: string;
+  login(email: string, password: string): Promise<void>;
+}
+
+// 📌 2. Test Data - Dùng INTERFACE
+interface TestUser {
+  username: string;
+  password: string;
+  email: string;
+}
+
+// 📌 3. Status/Config Values - Dùng TYPE
+type TestStatus = 'pass' | 'fail' | 'skip';
+type Environment = 'dev' | 'staging' | 'prod';
+type BrowserName = 'chromium' | 'firefox' | 'webkit';
+
+// 📌 4. Configuration - Dùng INTERFACE
+interface PlaywrightConfig {
+  baseURL: string;
+  timeout: number;
+  retries: number;
+  browser: BrowserName; // Type dùng trong Interface
+}
+
+// 📌 5. API Response - Dùng TYPE cho Discriminated Unions
+type ApiResponse = 
+  | { status: 'success'; data: any }
+  | { status: 'error'; error: string };
+
+// 📌 6. Utility Functions - Dùng TYPE
+type Validator = (value: string) => boolean;
+type AsyncAction = () => Promise<void>;
+
+// ========================================
+// 📝 TÓM TẮT
+// ========================================
+
+/*
+INTERFACE
+─────────
+✅ Object structures
+✅ Classes và OOP
+✅ Public APIs
+✅ Declaration merging
+✅ Better performance
+❌ Không làm được unions
+❌ Không làm được tuples
+❌ Không alias primitives
+
+TYPE
+────
+✅ Unions (A | B)
+✅ Tuples ([x, y])
+✅ Primitives aliases
+✅ Mapped types
+✅ Conditional types
+✅ Flexibility
+❌ Không có declaration merging
+❌ Performance chậm hơn chút
+
+BEST PRACTICE
+─────────────
+✅ Kết hợp cả hai
+✅ Interface cho objects
+✅ Type cho unions/tuples
+✅ Nhất quán trong project
+*/
+
+--------------------------------------------------------------------------------
+
+�📚 TYPE ALIAS & UNION TYPES CHI TIẾT
+
+🎯 Type Alias - Đặt tên cho Types
+
+// 📌 Type Alias là gì?
+// Cho phép đặt tên (alias) cho bất kỳ type nào
+// Giúp code dễ đọc, tái sử dụng, và maintain
+
+// ✅ Ví dụ cơ bản
+
+// Type alias cho primitive types
+type UserID = number;
+type Email = string;
+type IsActive = boolean;
+
+const userId: UserID = 12345;
+const userEmail: Email = 'user@example.com';
+const isActive: IsActive = true;
+
+// Type alias cho object types
+type User = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+type PageConfig = {
+  url: string;
+  timeout: number;
+  headless: boolean;
+};
+
+// Type alias cho array types
+type StringArray = string[];
+type NumberList = number[];
+type UserList = User[];
+
+// Type alias cho function types
+type ValidatorFunction = (value: string) => boolean;
+type ClickHandler = (x: number, y: number) => void;
+type AsyncFetcher = () => Promise<string>;
+
+--------------------------------------------------------------------------------
+
+🔀 Union Types - Kết hợp nhiều types
+
+// 📌 Union Type là gì?
+// Cho phép một biến có thể là một trong nhiều types
+// Sử dụng ký hiệu | (pipe)
+
+// ✅ Ví dụ cơ bản
+
+// Union của primitive types
+type StringOrNumber = string | number;
+
+let value: StringOrNumber;
+value = 'hello';     // ✅ OK
+value = 123;         // ✅ OK
+// value = true;     // ❌ Error: boolean không thuộc union
+
+// Union cho status values
+type Status = 'pending' | 'success' | 'error';
+
+let currentStatus: Status;
+currentStatus = 'pending';   // ✅ OK
+currentStatus = 'success';   // ✅ OK
+// currentStatus = 'loading'; // ❌ Error: 'loading' không hợp lệ
+
+// Union cho browser types
+type Browser = 'chrome' | 'firefox' | 'safari' | 'edge';
+
+const selectedBrowser: Browser = 'chrome';
+
+// Union của object types
+type LoginMethod = 
+  | { type: 'email'; email: string; password: string }
+  | { type: 'phone'; phone: string; otp: string }
+  | { type: 'social'; provider: 'google' | 'facebook'; token: string };
+
+--------------------------------------------------------------------------------
+
+🎯 Ví dụ thực tế trong Automation Testing
+
+// 📌 1. Page Status Types
+type PageStatus = 'loading' | 'loaded' | 'error' | 'timeout';
+
+let homePageStatus: PageStatus = 'loading';
+
+function updatePageStatus(status: PageStatus): void {
+  console.log(`Page status: ${status}`);
+}
+
+updatePageStatus('loaded');
+// updatePageStatus('invalid'); // ❌ Error
+
+// 📌 2. HTTP Methods
+type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+
+function makeRequest(url: string, method: HttpMethod): void {
+  console.log(`${method} request to ${url}`);
+}
+
+makeRequest('/api/users', 'GET');
+makeRequest('/api/users', 'POST');
+
+// 📌 3. Log Levels
+type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+
+function log(message: string, level: LogLevel = 'info'): void {
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] [${level.toUpperCase()}] ${message}`);
+}
+
+log('Test started', 'info');
+log('Element not found', 'error');
+
+// 📌 4. Element States
+type ElementState = 'visible' | 'hidden' | 'disabled' | 'enabled';
+
+function checkElementState(selector: string, state: ElementState): boolean {
+  console.log(`Checking if ${selector} is ${state}`);
+  return true; // simplified
+}
+
+// 📌 5. Test Results
+type TestResult = 'pass' | 'fail' | 'skip';
+
+type TestReport = {
+  testName: string;
+  result: TestResult;
+  duration: number;
+  errorMessage?: string;
+};
+
+const testReports: TestReport[] = [
+  { testName: 'Login Test', result: 'pass', duration: 1500 },
+  { testName: 'Checkout Test', result: 'fail', duration: 2300, errorMessage: 'Payment failed' },
+  { testName: 'Search Test', result: 'skip', duration: 0 }
+];
+
+// 📌 6. Configuration Environments
+type Environment = 'local' | 'dev' | 'staging' | 'production';
+
+type EnvConfig = {
+  env: Environment;
+  baseUrl: string;
+  apiUrl: string;
+  timeout: number;
+};
+
+const configs: Record<Environment, EnvConfig> = {
+  local: {
+    env: 'local',
+    baseUrl: 'http://localhost:3000',
+    apiUrl: 'http://localhost:8080/api',
+    timeout: 5000
+  },
+  dev: {
+    env: 'dev',
+    baseUrl: 'https://dev.example.com',
+    apiUrl: 'https://api-dev.example.com',
+    timeout: 10000
+  },
+  staging: {
+    env: 'staging',
+    baseUrl: 'https://staging.example.com',
+    apiUrl: 'https://api-staging.example.com',
+    timeout: 15000
+  },
+  production: {
+    env: 'production',
+    baseUrl: 'https://example.com',
+    apiUrl: 'https://api.example.com',
+    timeout: 30000
+  }
+};
+
+function getConfig(env: Environment): EnvConfig {
+  return configs[env];
+}
+
+const devConfig = getConfig('dev');
+console.log(devConfig.baseUrl);
+
+--------------------------------------------------------------------------------
+
+🔄 Type Narrowing với Union Types
+
+// 📌 Type Narrowing: Thu hẹp type trong Union
+// TypeScript tự động hiểu type cụ thể dựa vào code logic
+
+// ✅ Ví dụ với typeof
+function printValue(value: string | number): void {
+  if (typeof value === 'string') {
+    // TypeScript biết value là string ở đây
+    console.log(value.toUpperCase());
+  } else {
+    // TypeScript biết value là number ở đây
+    console.log(value.toFixed(2));
+  }
+}
+
+printValue('hello');  // HELLO
+printValue(123.456);  // 123.46
+
+// ✅ Ví dụ với literal types
+function handleStatus(status: 'success' | 'error' | 'pending'): string {
+  if (status === 'success') {
+    return '✅ Success';
+  } else if (status === 'error') {
+    return '❌ Error';
+  } else {
+    return '⏳ Pending';
+  }
+}
+
+// ✅ Ví dụ với discriminated unions (Tagged unions)
+type SuccessResponse = {
+  status: 'success';
+  data: string;
+};
+
+type ErrorResponse = {
+  status: 'error';
+  errorMessage: string;
+};
+
+type ApiResponse = SuccessResponse | ErrorResponse;
+
+function handleResponse(response: ApiResponse): void {
+  if (response.status === 'success') {
+    // TypeScript biết đây là SuccessResponse
+    console.log('Data:', response.data);
+  } else {
+    // TypeScript biết đây là ErrorResponse
+    console.log('Error:', response.errorMessage);
+  }
+}
+
+// Sử dụng
+const successRes: ApiResponse = {
+  status: 'success',
+  data: 'User data loaded'
+};
+
+const errorRes: ApiResponse = {
+  status: 'error',
+  errorMessage: 'Network timeout'
+};
+
+handleResponse(successRes);  // Data: User data loaded
+handleResponse(errorRes);    // Error: Network timeout
+
+// ✅ Ví dụ thực tế: Login Methods
+type EmailLogin = {
+  method: 'email';
+  email: string;
+  password: string;
+};
+
+type PhoneLogin = {
+  method: 'phone';
+  phoneNumber: string;
+  otp: string;
+};
+
+type SocialLogin = {
+  method: 'social';
+  provider: 'google' | 'facebook';
+  accessToken: string;
+};
+
+type LoginCredentials = EmailLogin | PhoneLogin | SocialLogin;
+
+function login(credentials: LoginCredentials): void {
+  switch (credentials.method) {
+    case 'email':
+      console.log(`Email login: ${credentials.email}`);
+      // TypeScript biết có email và password
+      break;
+    case 'phone':
+      console.log(`Phone login: ${credentials.phoneNumber}`);
+      // TypeScript biết có phoneNumber và otp
+      break;
+    case 'social':
+      console.log(`Social login: ${credentials.provider}`);
+      // TypeScript biết có provider và accessToken
+      break;
+  }
+}
+
+// Sử dụng
+login({ method: 'email', email: 'user@example.com', password: 'pass123' });
+login({ method: 'phone', phoneNumber: '+84123456789', otp: '123456' });
+login({ method: 'social', provider: 'google', accessToken: 'token123' });
+
+--------------------------------------------------------------------------------
+
+🎯 Best Practices cho Type Alias & Union Types
+
+✅ 1. Đặt tên Type rõ ràng, mô tả
+
+// ❌ Không rõ ràng
+type T = string | number;
+type Data = any;
+
+// ✅ Rõ ràng
+type UserId = string | number;
+type PageData = { title: string; url: string };
+
+✅ 2. Dùng Union Types cho giá trị giới hạn
+
+// ❌ Dùng string chung chung
+function setLogLevel(level: string): void { }
+
+// ✅ Dùng Union Types cụ thể
+type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+function setLogLevel(level: LogLevel): void { }
+
+✅ 3. Dùng Discriminated Unions cho complex objects
+
+// ✅ Tagged union với discriminator property
+type Shape = 
+  | { kind: 'circle'; radius: number }
+  | { kind: 'rectangle'; width: number; height: number }
+  | { kind: 'square'; size: number };
+
+function getArea(shape: Shape): number {
+  switch (shape.kind) {
+    case 'circle':
+      return Math.PI * shape.radius ** 2;
+    case 'rectangle':
+      return shape.width * shape.height;
+    case 'square':
+      return shape.size ** 2;
+  }
+}
+
+✅ 4. Tái sử dụng Type Alias
+
+// ✅ Định nghĩa một lần, dùng nhiều nơi
+type Timestamp = {
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type User = {
+  id: number;
+  name: string;
+} & Timestamp;
+
+type Product = {
+  sku: string;
+  name: string;
+  price: number;
+} & Timestamp;
+
+✅ 5. Kết hợp với Utility Types
+
+type User = {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+};
+
+// Partial - Tất cả properties optional
+type PartialUser = Partial<User>;
+
+// Pick - Chọn một số properties
+type UserPublicInfo = Pick<User, 'id' | 'name' | 'email'>;
+
+// Omit - Loại bỏ một số properties
+type UserWithoutPassword = Omit<User, 'password'>;
+
+// Record - Tạo object type
+type UserRoles = Record<'admin' | 'user' | 'guest', string[]>;
+
+const roles: UserRoles = {
+  admin: ['read', 'write', 'delete'],
+  user: ['read', 'write'],
+  guest: ['read']
+};
+
+--------------------------------------------------------------------------------
+
+📝 Tóm tắt Type Alias & Union Types
+
+Type Alias
+----------
+✅ Đặt tên cho bất kỳ type nào
+✅ Tái sử dụng, dễ maintain
+✅ Dùng cho: primitives, objects, functions, unions
+
+Cú pháp:
+type TypeName = Type;
+
+Union Types
+-----------
+✅ Kết hợp nhiều types với |
+✅ Giá trị có thể là một trong các types
+✅ TypeScript tự động type narrowing
+
+Cú pháp:
+type UnionType = Type1 | Type2 | Type3;
+
+Best Practices
+--------------
+1. Tên type rõ ràng, mô tả
+2. Union types cho giá trị giới hạn
+3. Discriminated unions cho complex objects
+4. Tái sử dụng type alias
+5. Kết hợp với utility types
+
+💡 Ví dụ thực tế với Class
+
+// ========================================
+// ✅ DÙNG INTERFACE - Định nghĩa structure
+// ========================================
+interface PageElement {
+  selector: string;
+  timeout: number;
+}
+
+interface PageConfig {
+  url: string;
+  title: string;
+  elements: PageElement[];
+}
+
+// ========================================
+// ✅ DÙNG CLASS - Implementation
+// ========================================
+class LoginPage {
+  url: string;
+  emailSelector: string;
+  passwordSelector: string;
+  submitButtonSelector: string;
+
+  constructor(url: string) {
+    this.url = url;
+    this.emailSelector = '#email';
+    this.passwordSelector = '#password';
+    this.submitButtonSelector = 'button[type="submit"]';
+  }
+
+  getEmailSelector(): string {
+    return this.emailSelector;
+  }
+
+  getPasswordSelector(): string {
+    return this.passwordSelector;
+  }
+
+  getSubmitButtonSelector(): string {
+    return this.submitButtonSelector;
+  }
+}
+
+// Sử dụng class
+const loginPage = new LoginPage('https://example.com/login');
+console.log('Email selector:', loginPage.getEmailSelector());
+
+// ========================================
+// ✅ DÙNG TYPE - Unions và Config
+// ========================================
+type Environment = 'dev' | 'staging' | 'production';
+type BrowserType = 'chromium' | 'firefox' | 'webkit';
+
+type AppConfig = {
+  env: Environment;
+  browser: BrowserType;
+  headless: boolean;
+  timeout: number;
+};
+
+const config: AppConfig = {
+  env: 'dev',
+  browser: 'chromium',
+  headless: true,
+  timeout: 30000
+};
+
+// Union type cho flexible data
+type LoginMethod = 
+  | { type: 'email'; email: string; password: string }
+  | { type: 'username'; username: string; password: string }
+  | { type: 'phone'; phone: string; otp: string };
+
+function login(method: LoginMethod) {
+  if (method.type === 'email') {
+    console.log('Login with email:', method.email);
+  } else if (method.type === 'username') {
+    console.log('Login with username:', method.username);
+  } else {
+    console.log('Login with phone:', method.phone);
+  }
+}
+
+// Sử dụng
+login({ type: 'email', email: 'user@example.com', password: 'pass123' });
+
+🎯 Best Practice: Kết hợp Interface và Type
+
+// ✅ RECOMMENDED PATTERN
+
+// Interface cho object structures
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+interface Page {
+  url: string;
+  title: string;
+  loadTime: number;
+}
+
+// Type cho unions, status
+type UserRole = 'admin' | 'user' | 'guest';
+type PageStatus = 'loading' | 'loaded' | 'error';
+
+// Kết hợp Interface và Type
+interface AuthenticatedUser extends User {
+  role: UserRole; // Type dùng trong Interface
+  token: string;
+  isActive: boolean;
+}
+
+const admin: AuthenticatedUser = {
+  id: 1,
+  name: 'Admin User',
+  email: 'admin@example.com',
+  role: 'admin',
+  token: 'abc123xyz',
+  isActive: true
+};
+
+// Union of Interfaces
+type SearchResult = User | Page;
+
+let result: SearchResult;
+result = { id: 1, name: 'John', email: 'john@example.com' }; // User
+result = { url: '/home', title: 'Home', loadTime: 1500 }; // Page
+
+================================================================================
+5. TYPE INFERENCE
+================================================================================
+
+🧠 TypeScript tự động suy luận kiểu
+
+// ✅ TypeScript tự hiểu không cần khai báo
+const baseURL = 'https://example.com'; // TypeScript biết đây là string
+const timeout = 5000; // TypeScript biết đây là number
+const isEnabled = true; // TypeScript biết đây là boolean
+
+const numbers = [1, 2, 3]; // TypeScript biết: number[]
+const names = ['John', 'Jane']; // TypeScript biết: string[]
+
+// 📌 Khi nào NÊN khai báo type?
+
+// 1. Function parameters (Luôn luôn phải khai báo)
+function navigateToPage(url: string, timeout: number): void {
+  console.log(`Navigating to ${url} with timeout ${timeout}ms`);
+}
+
+// 2. Khi khai báo biến trước, gán giá trị sau
+let userData: User; // Phải khai báo type
+// ... code khác
+userData = { id: 1, name: 'John', email: 'john@example.com' };
+
+// 3. Return type phức tạp (nên khai báo rõ ràng)
+function getUsers(): User[] {
+  return [
+    { id: 1, name: 'John', email: 'john@example.com' },
+    { id: 2, name: 'Jane', email: 'jane@example.com' }
+  ];
+}
+
+// ⚠️ Khi nào KHÔNG CẦN khai báo?
+const count = 10; // TypeScript tự hiểu là number
+const message = 'Hello'; // TypeScript tự hiểu là string
+const isActive = false; // TypeScript tự hiểu là boolean
+
+================================================================================
+6. BEST PRACTICES CHO PLAYWRIGHT TESTING
+================================================================================
+
+✅ DOs - Nên làm
+
+// 1. ✅ Dùng const cho config
+const CONFIG = {
+  BASE_URL: 'https://example.com',
+  TIMEOUT: 30000,
+  RETRY_ATTEMPTS: 3
+} as const; // as const để không thay đổi được
+
+// 2. ✅ Interface cho object structures
+interface PageConfig {
+  url: string;
+  title: string;
+  timeout: number;
+}
+
+const homePage: PageConfig = {
+  url: '/home',
+  title: 'Home Page',
+  timeout: 5000
+};
+
+// 3. ✅ Type cho unions và constants
+type UserRole = 'admin' | 'user' | 'guest';
+
+type UserData = {
+  email: string;
+  password: string;
+  role: UserRole;
+};
+
+// 4. ✅ Enum cho constants có nhiều giá trị
+enum Selector {
+  LOGIN_BTN = '#login',
+  EMAIL_INPUT = 'input[type="email"]',
+  PASSWORD_INPUT = 'input[type="password"]'
+}
+
+console.log(Selector.LOGIN_BTN); // Output: #login
+
+// 5. ✅ Type guards cho unknown
+function isError(error: unknown): error is Error {
+  return error instanceof Error;
+}
+
+try {
+  throw new Error('Test error');
+} catch (err: unknown) {
+  if (isError(err)) {
+    console.error('Error:', err.message);
+  }
+}
+
+❌ DON'Ts - Tránh làm
+
+// 1. ❌ TRÁNH var
+var globalVar = 'test'; // Dùng const hoặc let
+
+// 2. ❌ TRÁNH any (dùng unknown)
+let data: any; // ❌
+let data: unknown; // ✅
+
+// 3. ❌ TRÁNH type assertion không cần thiết
+const count = items.length as number; // Thừa, TypeScript đã biết
+
+// 4. ❌ TRÁNH khai báo type khi TypeScript tự suy luận được
+const url: string = 'https://example.com'; // Thừa
+const url = 'https://example.com'; // ✅ Đủ rồi
+
+🎯 Ví dụ hoàn chỉnh - Login Page Class
+
+// ========== CONSTANTS ==========
+const BASE_URL = 'https://app.example.com';
+const LOGIN_PATH = '/login';
+const TIMEOUT = 5000;
+
+// ========== TYPES ==========
+type LoginCredentials = {
+  email: string;
+  password: string;
+};
+
+type PageStatus = 'loading' | 'loaded' | 'error';
+
+// ========== INTERFACE ==========
+interface ILoginPage {
+  url: string;
+  emailSelector: string;
+  passwordSelector: string;
+  submitButtonSelector: string;
+  
+  getFullUrl(): string;
+  getEmailSelector(): string;
+  getPasswordSelector(): string;
+}
+
+// ========== CLASS IMPLEMENTATION ==========
+class LoginPage implements ILoginPage {
+  url: string;
+  emailSelector: string;
+  passwordSelector: string;
+  submitButtonSelector: string;
+  timeout: number;
+
+  constructor(baseUrl: string, timeout: number = TIMEOUT) {
+    this.url = baseUrl + LOGIN_PATH;
+    this.emailSelector = '#email';
+    this.passwordSelector = '#password';
+    this.submitButtonSelector = 'button[type="submit"]';
+    this.timeout = timeout;
+  }
+
+  getFullUrl(): string {
+    return this.url;
+  }
+
+  getEmailSelector(): string {
+    return this.emailSelector;
+  }
+
+  getPasswordSelector(): string {
+    return this.passwordSelector;
+  }
+
+  getSubmitButtonSelector(): string {
+    return this.submitButtonSelector;
+  }
+
+  displayInfo(): void {
+    console.log('=== Login Page Info ===');
+    console.log('URL:', this.getFullUrl());
+    console.log('Email Selector:', this.getEmailSelector());
+    console.log('Password Selector:', this.getPasswordSelector());
+    console.log('Submit Button:', this.getSubmitButtonSelector());
+    console.log('Timeout:', this.timeout, 'ms');
+  }
+}
+
+// ========== USER DATA ==========
+const users: LoginCredentials[] = [
+  { email: 'admin@test.com', password: 'Admin@123' },
+  { email: 'user@test.com', password: 'User@123' },
+  { email: 'guest@test.com', password: 'Guest@123' }
+];
+
+// ========== USAGE ==========
+// Tạo instance của LoginPage
+const loginPage = new LoginPage(BASE_URL);
+
+// Hiển thị thông tin
+loginPage.displayInfo();
+
+// Sử dụng với user data
+console.log('\n=== User Credentials ===');
+users.forEach((user, index) => {
+  console.log(`User ${index + 1}:`, user.email);
+});
+
+// Output:
+// === Login Page Info ===
+// URL: https://app.example.com/login
+// Email Selector: #email
+// Password Selector: #password
+// Submit Button: button[type="submit"]
+// Timeout: 5000 ms
+//
+// === User Credentials ===
+// User 1: admin@test.com
+// User 2: user@test.com
+// User 3: guest@test.com
+
+================================================================================
+TÓM TẮT - CHEAT SHEET
+================================================================================
+
+Khai báo biến
+-------------
+const CONFIG = { url: '...' };  // ✅ Config, URLs, constants
+let counter = 0;                 // ✅ Biến thay đổi
+// var - ❌ Không dùng
+
+Kiểu dữ liệu cơ bản
+-------------------
+const url: string = 'https://...';
+const timeout: number = 5000;
+const isVisible: boolean = true;
+const items: string[] = ['a', 'b'];
+
+any vs unknown
+--------------
+let data: any;      // ❌ Tránh - mất type safety
+let data: unknown;  // ✅ Dùng - an toàn hơn
+
+Interface vs Type
+-----------------
+interface User { }     // ✅ Objects, Page Objects
+type Status = 'ok';    // ✅ Unions, Tuples
+
+Quy tắc vàng
+------------
+1. Dùng const mặc định, let khi cần thay đổi
+2. Tránh any, dùng unknown
+3. Interface cho objects, Type cho unions
+4. Luôn type-check với unknown
+5. Ưu tiên type inference
+
+================================================================================
+📝 SUMMARY - TÓM TẮT QUAN TRỌNG
+================================================================================
+
+🎯 QUY TẮC ÁP DỤNG NHANH
+
+┌─────────────────────────────────────────────────────────────────┐
+│                     QUICK REFERENCE                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│ 📌 VARIABLES                                                     │
+│    const  → Mặc định (không đổi)                                │
+│    let    → Khi cần thay đổi giá trị                            │
+│    var    → ❌ Không dùng                                        │
+│                                                                  │
+│ 📌 NAMING                                                        │
+│    Variables/Functions  → camelCase                             │
+│    Classes/Interfaces   → PascalCase                            │
+│    Constants            → UPPER_SNAKE_CASE                       │
+│    Files/Folders        → kebab-case                             │
+│                                                                  │
+│ 📌 TYPE SAFETY                                                   │
+│    Objects              → interface                              │
+│    Unions/Primitives    → type                                   │
+│    Unknown data         → unknown (không dùng any)               │
+│    Type inference       → Để TypeScript tự suy luận             │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+================================================================================
+TÀI LIỆU THAM KHẢO
+================================================================================
+
+- TypeScript Handbook: https://www.typescriptlang.org/docs/handbook/intro.html
+- Playwright TypeScript Guide: https://playwright.dev/docs/test-typescript
+- TypeScript Deep Dive: https://basarat.gitbook.io/typescript/
+
+================================================================================
+🎓 End of Module
+Variables & Data Types trong TypeScript for Playwright Testing
+Hẹn gặp lại ở Module 02: Functions & Logic Control!
+================================================================================

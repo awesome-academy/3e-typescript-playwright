@@ -1,0 +1,38 @@
+<!-- Slide 8: Ứng dụng let/const trong Playwright -->
+<div style="padding: 38px; background: white; ">
+  <h2 style="font-size: 32px; font-weight: bold; color: #0f172a; margin-bottom: 8px;">Ứng dụng trong Automation</h2>
+  <p style="font-size: 24px; color: #475569; margin-bottom: 24px;">✅ Thực tế khai báo trong Playwright Test</p>
+  
+  <div style="background: #18181b; border-radius: 16px; padding: 32px; position: relative; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+    <div style="position: absolute; top: 16px; right: 16px; display: flex; gap: 8px;">
+      <div style="width: 12px; height: 12px; border-radius: 50%; background: #ef4444;"></div>
+      <div style="width: 12px; height: 12px; border-radius: 50%; background: #eab308;"></div>
+      <div style="width: 12px; height: 12px; border-radius: 50%; background: #22c55e;"></div>
+    </div>
+    
+    <pre style="font-family: 'Courier New', monospace; font-size: 17px; color: #93c5fd; line-height: 1.8; overflow: auto; margin: 0;"><code><span style="color: #71717a; font-style: italic;">// 📌 URLs và Selectors cố định -> Dùng const</span>
+<span style="color: #a78bfa;">const</span> BASE_URL = <span style="color: #86efac;">'https://example.com'</span>;
+<span style="color: #a78bfa;">const</span> LOGIN_BTN = <span style="color: #86efac;">'#login-button'</span>;
+
+<span style="color: #71717a; font-style: italic;">// 📌 Dữ liệu thay đổi trong quá trình test -> Dùng let</span>
+<span style="color: #a78bfa;">let</span> retryCount = <span style="color: #fdba74;">0</span>;
+<span style="color: #a78bfa;">let</span> isLoggedIn = <span style="color: #fdba74;">false</span>;
+
+<span style="color: #a78bfa;">for</span> (<span style="color: #a78bfa;">let</span> i = <span style="color: #fdba74;">0</span>; i < <span style="color: #fdba74;">3</span>; i++) {
+    <span style="color: #71717a; font-style: italic;">// Logic thực hiện lại khi fail</span>
+    retryCount++;
+}</code></pre>
+  </div>
+  
+  <div style="margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <div style="padding: 20px; background: #ecfdf5;  border-left: 4px solid #10b981;">
+      <h4 style="color: #065f46; font-weight: bold; margin-bottom: 8px; font-size: 24px;">✅ Dùng const</h4>
+      <p style="color: #047857; margin: 0; font-size: 17px; line-height: 1.6;">URLs, Selectors, Configuration, Test Data cố định</p>
+    </div>
+    
+    <div style="padding: 20px; background: #eff6ff;  border-left: 4px solid #3b82f6;">
+      <h4 style="color: #1e40af; font-weight: bold; margin-bottom: 8px; font-size: 24px;">✅ Dùng let</h4>
+      <p style="color: #1e40af; margin: 0; font-size: 17px; line-height: 1.6;">Counters, Flags, Loop variables, Dynamic data</p>
+    </div>
+  </div>
+</div>

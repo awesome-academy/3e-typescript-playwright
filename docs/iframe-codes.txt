@@ -1,0 +1,50 @@
+<!-- Slide 1: Trang bìa -->
+<iframe src="https://awesome-academy.github.io/3e-typescript-playwright/typescript/module1/slide-00-cover.html" width="100%" height="650" style="border:none;"></iframe>
+
+<!-- Slide 2: Mục tiêu học tập -->
+<iframe src="https://awesome-academy.github.io/3e-typescript-playwright/typescript/module1/slide-01-objectives.html" width="100%" height="650" style="border:none;"></iframe>
+
+<!-- Slide 3: Nội dung bài học -->
+<iframe src="https://awesome-academy.github.io/3e-typescript-playwright/typescript/module1/slide-02-roadmap.html" width="100%" height="650" style="border:none;"></iframe>
+
+<!-- Slide 4: Tổng quan TypeScript -->
+<iframe src="https://awesome-academy.github.io/3e-typescript-playwright/typescript/module1/slide-03-typescript-overview.html" width="100%" height="650" style="border:none;"></iframe>
+
+<!-- Slide 5: So sánh JS vs TS -->
+<iframe src="https://awesome-academy.github.io/3e-typescript-playwright/typescript/module1/slide-04-code-comparison.html" width="100%" height="650" style="border:none;"></iframe>
+
+<!-- Slide 6: Coding Conventions -->
+<iframe src="https://awesome-academy.github.io/3e-typescript-playwright/typescript/module1/slide-05-coding-conventions.html" width="100%" height="650" style="border:none;"></iframe>
+
+<!-- Slide 7: Bảng quy tắc đặt tên -->
+<iframe src="https://awesome-academy.github.io/3e-typescript-playwright/typescript/module1/slide-06-naming-table.html" width="100%" height="650" style="border:none;"></iframe>
+
+<!-- Slide 8: Khai báo biến: let, const, var -->
+<iframe src="https://awesome-academy.github.io/3e-typescript-playwright/typescript/module1/slide-07-let-const-var.html" width="100%" height="650" style="border:none;"></iframe>
+
+<!-- Slide 9: Ứng dụng trong Playwright -->
+<iframe src="https://awesome-academy.github.io/3e-typescript-playwright/typescript/module1/slide-08-playwright-usage.html" width="100%" height="650" style="border:none;"></iframe>
+
+<!-- Slide 10: Kiểu dữ liệu cơ bản -->
+<iframe src="https://awesome-academy.github.io/3e-typescript-playwright/typescript/module1/slide-09-basic-types.html" width="100%" height="650" style="border:none;"></iframe>
+
+<!-- Slide 11: any vs unknown -->
+<iframe src="https://awesome-academy.github.io/3e-typescript-playwright/typescript/module1/slide-10-any-vs-unknown.html" width="100%" height="650" style="border:none;"></iframe>
+
+<!-- Slide 12: Interface vs Type Alias -->
+<iframe src="https://awesome-academy.github.io/3e-typescript-playwright/typescript/module1/slide-11-interface-vs-type.html" width="100%" height="650" style="border:none;"></iframe>
+
+<!-- Slide 13: Ví dụ Interface & Type -->
+<iframe src="https://awesome-academy.github.io/3e-typescript-playwright/typescript/module1/slide-12-interface-type-example.html" width="100%" height="650" style="border:none;"></iframe>
+
+<!-- Slide 14: Type Inference -->
+<iframe src="https://awesome-academy.github.io/3e-typescript-playwright/typescript/module1/slide-13-type-inference.html" width="100%" height="650" style="border:none;"></iframe>
+
+<!-- Slide 15: Best Practices -->
+<iframe src="https://awesome-academy.github.io/3e-typescript-playwright/typescript/module1/slide-14-best-practices.html" width="100%" height="650" style="border:none;"></iframe>
+
+<!-- Slide 16: Tóm tắt -->
+<iframe src="https://awesome-academy.github.io/3e-typescript-playwright/typescript/module1/slide-15-summary.html" width="100%" height="650" style="border:none;"></iframe>
+
+<!-- Slide 17: Kết thúc -->
+<iframe src="https://awesome-academy.github.io/3e-typescript-playwright/typescript/module1/slide-16-end.html" width="100%" height="650" style="border:none;"></iframe>

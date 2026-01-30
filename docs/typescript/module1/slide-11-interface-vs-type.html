@@ -1,0 +1,49 @@
+<!-- Slide 11: Interface vs Type Alias -->
+<div style="padding: 38px; background: white; ">
+  <h2 style="font-size: 32px; font-weight: bold; color: #0f172a; margin-bottom: 32px;">Interface vs Type Alias</h2>
+  
+  <div style="border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin-bottom: 32px;">
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead style="background: #2563eb; color: white;">
+        <tr>
+          <th style="padding: 16px; font-size: 24px; font-weight: bold; text-align: left;">Đặc điểm</th>
+          <th style="padding: 16px; font-size: 24px; font-weight: bold; text-align: left;">interface</th>
+          <th style="padding: 16px; font-size: 24px; font-weight: bold; text-align: left;">type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 16px; font-weight: bold; background: #f8fafc; font-size: 17px;">Mở rộng</td>
+          <td style="padding: 16px; font-size: 17px;">Dùng 'extends'</td>
+          <td style="padding: 16px; font-size: 17px;">Dùng '&' (Intersection)</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 16px; font-weight: bold; background: #f8fafc; font-size: 17px;">Declaration Merging</td>
+          <td style="padding: 16px; font-size: 17px;">✅ Có thể</td>
+          <td style="padding: 16px; font-size: 17px;">❌ Không thể</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 16px; font-weight: bold; background: #f8fafc; font-size: 17px;">Union Types</td>
+          <td style="padding: 16px; font-size: 17px;">❌ Không hỗ trợ</td>
+          <td style="padding: 16px; font-size: 17px;">✅ Hỗ trợ tốt (A | B)</td>
+        </tr>
+        <tr>
+          <td style="padding: 16px; font-weight: bold; background: #f8fafc; font-size: 17px;">Phù hợp cho</td>
+          <td style="padding: 16px; font-size: 17px;">Định nghĩa Object, Class</td>
+          <td style="padding: 16px; font-size: 17px;">Union, Tuple, Complex Type</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div style="padding: 24px; background: #fef3c7; border-radius: 16px; border: 1px solid #fbbf24; display: flex; align-items: start; gap: 16px;">
+    <div style="margin-top: 4px;">
+      <svg style="width: 24px; height: 24px; color: #d97706;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+      </svg>
+    </div>
+    <p style="font-size: 24px; color: #92400e; font-weight: 500; margin: 0; line-height: 1.6;">
+      <strong>Best Practice:</strong> QA nên dùng <code style="background: white; padding: 2px 8px; border-radius: 4px; font-family: monospace;">interface</code> cho Page Objects và <code style="background: white; padding: 2px 8px; border-radius: 4px; font-family: monospace;">type</code> cho các trạng thái (Status).
+    </p>
+  </div>
+</div>

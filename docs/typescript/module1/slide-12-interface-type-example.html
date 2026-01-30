@@ -1,0 +1,42 @@
+<!-- Slide 12: Ví dụ Interface & Type -->
+<div style="padding: 38px; background: white; ">
+  <h2 style="font-size: 32px; font-weight: bold; color: #0f172a; margin-bottom: 8px;">Ví dụ Interface & Type trong Automation</h2>
+  <p style="font-size: 24px; color: #475569; margin-bottom: 24px;">Định nghĩa cấu trúc dữ liệu cho Test Data</p>
+  
+  <div style="background: #18181b; border-radius: 16px; padding: 32px; position: relative; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+    <div style="position: absolute; top: 16px; right: 16px; display: flex; gap: 8px;">
+      <div style="width: 12px; height: 12px; border-radius: 50%; background: #ef4444;"></div>
+      <div style="width: 12px; height: 12px; border-radius: 50%; background: #eab308;"></div>
+      <div style="width: 12px; height: 12px; border-radius: 50%; background: #22c55e;"></div>
+    </div>
+    
+    <pre style="font-family: 'Courier New', monospace; font-size: 17px; color: #93c5fd; line-height: 1.8; overflow: auto; margin: 0;"><code><span style="color: #71717a; font-style: italic;">// ✅ Interface cho Object Test Data</span>
+<span style="color: #a78bfa;">interface</span> <span style="color: #fbbf24;">UserAccount</span> {
+    <span style="color: #a78bfa;">readonly</span> id: <span style="color: #fdba74;">number</span>; <span style="color: #71717a; font-style: italic;">// Không cho phép sửa</span>
+    username: <span style="color: #fdba74;">string</span>;
+    email: <span style="color: #fdba74;">string</span>;
+    phone?: <span style="color: #fdba74;">string</span>;    <span style="color: #71717a; font-style: italic;">// Thuộc tính optional</span>
+}
+
+<span style="color: #71717a; font-style: italic;">// ✅ Type cho trạng thái trang (Union Type)</span>
+<span style="color: #a78bfa;">type</span> <span style="color: #fbbf24;">PageStatus</span> = <span style="color: #86efac;">'loading'</span> | <span style="color: #86efac;">'success'</span> | <span style="color: #86efac;">'failed'</span> | <span style="color: #86efac;">'timeout'</span>;
+
+<span style="color: #a78bfa;">const</span> admin: <span style="color: #fbbf24;">UserAccount</span> = {
+    id: <span style="color: #fdba74;">1</span>,
+    username: <span style="color: #86efac;">'admin_qa'</span>,
+    email: <span style="color: #86efac;">'admin@test.com'</span>
+};</code></pre>
+  </div>
+  
+  <div style="margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <div style="padding: 20px; background: #f0f9ff;  border-left: 4px solid #3b82f6;">
+      <h4 style="color: #1e40af; font-weight: bold; margin-bottom: 8px; font-size: 24px;">interface UserAccount</h4>
+      <p style="color: #1e3a8a; margin: 0; font-size: 17px; line-height: 1.6;">Định nghĩa cấu trúc object cho User test data</p>
+    </div>
+    
+    <div style="padding: 20px; background: #f0fdf4;  border-left: 4px solid #22c55e;">
+      <h4 style="color: #15803d; font-weight: bold; margin-bottom: 8px; font-size: 24px;">type PageStatus</h4>
+      <p style="color: #166534; margin: 0; font-size: 17px; line-height: 1.6;">Union type cho các trạng thái trang có thể có</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+<!-- Slide 10: any vs unknown -->
+<div style="padding: 38px; background: white; ">
+  <h2 style="font-size: 32px; font-weight: bold; color: #0f172a; margin-bottom: 32px;">Sự "lỏng lẻo" của any vs unknown</h2>
+  
+  <div style="border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin-bottom: 32px;">
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead style="background: #2563eb; color: white;">
+        <tr>
+          <th style="padding: 16px; font-size: 24px; font-weight: bold; text-align: left;">Đặc điểm</th>
+          <th style="padding: 16px; font-size: 24px; font-weight: bold; text-align: left;">any</th>
+          <th style="padding: 16px; font-size: 24px; font-weight: bold; text-align: left;">unknown</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 16px; font-weight: bold; background: #f8fafc; font-size: 17px;">Type Checking</td>
+          <td style="padding: 16px; font-size: 17px;">❌ Tắt hoàn toàn</td>
+          <td style="padding: 16px; font-size: 17px;">✅ Luôn kiểm tra</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 16px; font-weight: bold; background: #f8fafc; font-size: 17px;">Type Safety</td>
+          <td style="padding: 16px; font-size: 17px;">❌ Không an toàn</td>
+          <td style="padding: 16px; font-size: 17px;">✅ Rất an toàn</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 16px; font-weight: bold; background: #f8fafc; font-size: 17px;">Gán cho kiểu khác</td>
+          <td style="padding: 16px; font-size: 17px;">✅ Tự do</td>
+          <td style="padding: 16px; font-size: 17px;">❌ Phải check type trước</td>
+        </tr>
+        <tr>
+          <td style="padding: 16px; font-weight: bold; background: #f8fafc; font-size: 17px;">Best Practice</td>
+          <td style="padding: 16px; font-size: 17px;">❌ Tránh lạm dụng</td>
+          <td style="padding: 16px; font-size: 17px;">✅ Ưu tiên sử dụng</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div style="padding: 24px; background: #fef2f2; border-radius: 16px; border: 1px solid #fca5a5; display: flex; align-items: start; gap: 16px;">
+    <div style="margin-top: 4px;">
+      <svg style="width: 24px; height: 24px; color: #dc2626;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+      </svg>
+    </div>
+    <p style="font-size: 24px; color: #991b1b; font-weight: 500; margin: 0; line-height: 1.6;">
+      <strong>Lưu ý:</strong> Dùng <code style="background: white; padding: 2px 8px; border-radius: 4px; font-family: monospace;">unknown</code> khi nhận dữ liệu từ API không rõ cấu trúc.
+    </p>
+  </div>
+</div>

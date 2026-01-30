@@ -1,0 +1,1396 @@
+================================================================================
+FUNCTIONS TRONG TYPESCRIPT
+Cho Playwright Automation Testing
+================================================================================
+
+================================================================================
+MỤC TIÊU HỌC TẬP
+================================================================================
+
+🎯 Sau khi hoàn thành module này, bạn sẽ:
+
+✅ Hiểu rõ sự khác biệt giữa Function Declaration và Arrow Function
+✅ Biết cách khai báo type cho parameters và return type chính xác
+✅ Sử dụng thành thạo Optional, Default, và Rest Parameters
+✅ Áp dụng Function Overloading cho các tình huống phức tạp
+✅ Viết functions tối ưu và type-safe cho Playwright automation
+✅ Nắm vững Best Practices khi làm việc với functions trong TypeScript
+
+================================================================================
+TỔNG QUAN - TẠI SAO FUNCTIONS QUAN TRỌNG?
+================================================================================
+
+🎯 Functions là nền tảng của Automation Testing
+
+✅ Tái sử dụng code: Viết một lần, dùng nhiều lần
+✅ Tổ chức code: Chia nhỏ logic phức tạp thành các phần dễ quản lý
+✅ Type Safety: TypeScript kiểm tra type ngay khi code
+✅ Maintainability: Dễ dàng update và fix bugs
+✅ Testability: Functions nhỏ dễ test hơn
+
+💡 Ví dụ thực tế
+
+// ❌ Không dùng function - Code lặp lại
+await page.goto('https://example.com/login');
+await page.fill('#email', 'user1@test.com');
+await page.fill('#password', 'Pass@123');
+await page.click('#submit');
+
+await page.goto('https://example.com/login');
+await page.fill('#email', 'user2@test.com');
+await page.fill('#password', 'Pass@456');
+await page.click('#submit');
+
+// ✅ Dùng function - Clean, reusable
+async function login(email: string, password: string): Promise<void> {
+  await page.goto('https://example.com/login');
+  await page.fill('#email', email);
+  await page.fill('#password', password);
+  await page.click('#submit');
+}
+
+// Sử dụng
+await login('user1@test.com', 'Pass@123');
+await login('user2@test.com', 'Pass@456');
+
+================================================================================
+MỤC LỤC
+================================================================================
+
+1. Function Declaration (Khai báo hàm truyền thống)
+2. Arrow Function (Hàm mũi tên)
+3. Typing cho Parameters & Return Type
+4. Optional Parameters (Tham số tùy chọn)
+5. Default Parameters (Tham số mặc định)
+6. Rest Parameters (Tham số còn lại)
+7. Function Overloading
+8. Best Practices
+
+================================================================================
+1. FUNCTION DECLARATION (Khai báo hàm truyền thống)
+================================================================================
+
+📌 Cú pháp cơ bản
+
+function functionName(param1: type, param2: type): returnType {
+  // function body
+  return value;
+}
+
+✅ Ví dụ thực tế
+
+// 📌 Function không có return (void)
+function printUrl(url: string): void {
+  console.log('Navigating to:', url);
+}
+
+printUrl('https://example.com');
+// Output: Navigating to: https://example.com
+
+// 📌 Function có return type string
+function getFullUrl(baseUrl: string, path: string): string {
+  return baseUrl + path;
+}
+
+const loginUrl = getFullUrl('https://example.com', '/login');
+console.log(loginUrl); // https://example.com/login
+
+// 📌 Function có return type number
+function calculateTimeout(baseTimeout: number, multiplier: number): number {
+  return baseTimeout * multiplier;
+}
+
+const timeout = calculateTimeout(5000, 2);
+console.log(timeout); // 10000
+
+// 📌 Function có return type boolean
+function isValidEmail(email: string): boolean {
+  return email.includes('@') && email.includes('.');
+}
+
+console.log(isValidEmail('test@example.com')); // true
+console.log(isValidEmail('invalid-email')); // false
+
+// 📌 Function với nhiều parameters
+function createUser(
+  username: string, 
+  email: string, 
+  age: number
+): object {
+  return {
+    username: username,
+    email: email,
+    age: age,
+    createdAt: new Date()
+  };
+}
+
+const newUser = createUser('john_doe', 'john@example.com', 25);
+console.log(newUser);
+
+--------------------------------------------------------------------------------
+
+💡 Ưu điểm của Function Declaration
+
+✅ Dễ đọc, dễ hiểu với người mới
+✅ Hoisting: Có thể gọi function trước khi khai báo
+✅ Rõ ràng với tên function
+
+// ✅ Hoisting - Gọi trước khi khai báo
+greetUser('Alice'); // OK - Function được "hoisted"
+
+function greetUser(name: string): void {
+  console.log(`Hello, ${name}!`);
+}
+
+================================================================================
+2. ARROW FUNCTION (Hàm mũi tên)
+================================================================================
+
+📌 Cú pháp cơ bản
+
+const functionName = (param1: type, param2: type): returnType => {
+  // function body
+  return value;
+};
+
+// Cú pháp ngắn gọn (1 expression, tự động return)
+const functionName = (param: type): returnType => expression;
+
+✅ Ví dụ thực tế
+
+// 📌 Arrow function cơ bản
+const getLoginUrl = (baseUrl: string): string => {
+  return baseUrl + '/login';
+};
+
+console.log(getLoginUrl('https://example.com')); 
+// Output: https://example.com/login
+
+// 📌 Arrow function ngắn gọn (implicit return)
+const getLoginUrlShort = (baseUrl: string): string => baseUrl + '/login';
+
+console.log(getLoginUrlShort('https://example.com'));
+// Output: https://example.com/login
+
+// 📌 Arrow function với nhiều parameters
+const buildSelector = (tag: string, id: string): string => {
+  return `${tag}#${id}`;
+};
+
+console.log(buildSelector('button', 'submit')); 
+// Output: button#submit
+
+// 📌 Arrow function ngắn gọn nhiều params
+const multiply = (a: number, b: number): number => a * b;
+
+console.log(multiply(5, 3)); // 15
+
+// 📌 Arrow function không có parameters
+const getCurrentTimestamp = (): number => Date.now();
+
+console.log(getCurrentTimestamp()); // 1738166400000
+
+// 📌 Arrow function với 1 parameter (có thể bỏ ngoặc)
+const double = (num: number): number => num * 2;
+
+console.log(double(5)); // 10
+
+// 📌 Arrow function return object (chú ý dấu ngoặc)
+const createConfig = (url: string, timeout: number) => ({
+  baseUrl: url,
+  timeout: timeout,
+  headless: true
+});
+
+console.log(createConfig('https://example.com', 5000));
+// Output: { baseUrl: 'https://example.com', timeout: 5000, headless: true }
+
+--------------------------------------------------------------------------------
+
+📊 So sánh Function Declaration vs Arrow Function
+
++---------------------------+----------------------+----------------------+
+| Đặc điểm                  | Function Declaration | Arrow Function       |
++---------------------------+----------------------+----------------------+
+| Cú pháp                   | function name() {}   | const name = () => {}|
+| Hoisting                  | ✅ Có                | ❌ Không             |
+| this binding              | Dynamic              | Lexical (từ scope)   |
+| Dùng làm method           | ✅ Tốt               | ⚠️ Cẩn thận          |
+| Callback                  | ✅ OK                | ✅ Tốt hơn           |
+| Độ ngắn gọn               | ⚠️ Dài hơn           | ✅ Ngắn gọn          |
+| Dùng trong automation     | ✅ Helper functions  | ✅ Callbacks, utils  |
++---------------------------+----------------------+----------------------+
+
+💡 Khi nào dùng gì?
+
+✅ DÙNG FUNCTION DECLARATION khi:
+- Function có tên rõ ràng, dễ debug
+- Cần hoisting (gọi trước khi khai báo)
+- Định nghĩa methods trong class
+
+✅ DÙNG ARROW FUNCTION khi:
+- Callback functions
+- Array methods (map, filter, forEach)
+- Short utility functions
+- Cần giữ nguyên context 'this'
+
+--------------------------------------------------------------------------------
+
+🎯 Ví dụ thực tế trong Automation
+
+// ✅ Function Declaration - Helper functions
+function validateLoginForm(email: string, password: string): boolean {
+  if (!email || !password) {
+    console.log('Email and password are required');
+    return false;
+  }
+  if (!email.includes('@')) {
+    console.log('Invalid email format');
+    return false;
+  }
+  if (password.length < 6) {
+    console.log('Password must be at least 6 characters');
+    return false;
+  }
+  return true;
+}
+
+// ✅ Arrow Function - Utilities
+const buildFullUrl = (base: string, path: string): string => `${base}${path}`;
+
+const formatSelector = (type: string, value: string): string => 
+  `${type}[${value}]`;
+
+const wait = (ms: number): void => {
+  const start = Date.now();
+  while (Date.now() - start < ms) {
+    // wait
+  }
+};
+
+// Sử dụng
+if (validateLoginForm('user@example.com', 'Pass@123')) {
+  const url = buildFullUrl('https://example.com', '/dashboard');
+  const selector = formatSelector('button', 'id="submit"');
+  console.log('Navigating to:', url);
+  console.log('Clicking:', selector);
+}
+
+// ✅ Arrow Function với Array methods
+const urls = ['/home', '/about', '/contact'];
+const fullUrls = urls.map((path: string): string => 
+  buildFullUrl('https://example.com', path)
+);
+
+console.log(fullUrls);
+// Output: [
+//   'https://example.com/home',
+//   'https://example.com/about',
+//   'https://example.com/contact'
+// ]
+
+================================================================================
+3. TYPING CHO PARAMETERS & RETURN TYPE
+================================================================================
+
+📌 Quy tắc vàng
+
+// ✅ LUÔN LUÔN khai báo type cho parameters
+// ✅ NÊN khai báo return type (để rõ ràng)
+
+✅ Ví dụ chi tiết
+
+// 📌 Primitive types
+function greet(name: string): string {
+  return `Hello, ${name}!`;
+}
+
+function add(a: number, b: number): number {
+  return a + b;
+}
+
+function isActive(status: boolean): boolean {
+  return status === true;
+}
+
+// 📌 Array types
+function getFirstItem(items: string[]): string {
+  return items[0];
+}
+
+function sumNumbers(numbers: number[]): number {
+  return numbers.reduce((sum, num) => sum + num, 0);
+}
+
+// 📌 Object types
+function createUser(name: string, age: number): { name: string; age: number } {
+  return { name, age };
+}
+
+// Hoặc dùng interface/type
+interface User {
+  name: string;
+  age: number;
+  email: string;
+}
+
+function registerUser(name: string, age: number, email: string): User {
+  return { name, age, email };
+}
+
+// 📌 Union types
+function getStatus(code: number): 'success' | 'error' | 'pending' {
+  if (code === 200) return 'success';
+  if (code >= 400) return 'error';
+  return 'pending';
+}
+
+// 📌 void return type (không return gì)
+function logMessage(message: string): void {
+  console.log(message);
+  // Không có return statement
+}
+
+// 📌 never return type (không bao giờ return)
+function throwError(message: string): never {
+  throw new Error(message);
+  // Không bao giờ đến được cuối function
+}
+
+function infiniteLoop(): never {
+  while (true) {
+    // infinite loop
+  }
+}
+
+--------------------------------------------------------------------------------
+
+💡 Type Inference với Return Type
+
+// TypeScript có thể tự suy luận return type
+// Nhưng NÊN khai báo rõ ràng để dễ đọc
+
+// ⚠️ Không khai báo - TypeScript tự suy luận
+function multiply(a: number, b: number) {
+  return a * b; // TypeScript biết return type là number
+}
+
+// ✅ Nên khai báo rõ ràng
+function multiplyExplicit(a: number, b: number): number {
+  return a * b;
+}
+
+--------------------------------------------------------------------------------
+
+🎯 Ví dụ thực tế trong Automation
+
+// 📌 Configuration builder
+interface BrowserConfig {
+  browser: 'chrome' | 'firefox' | 'safari';
+  headless: boolean;
+  timeout: number;
+}
+
+function createBrowserConfig(
+  browser: 'chrome' | 'firefox' | 'safari',
+  headless: boolean = true,
+  timeout: number = 30000
+): BrowserConfig {
+  return { browser, headless, timeout };
+}
+
+const config = createBrowserConfig('chrome', false, 60000);
+console.log(config);
+
+// 📌 Selector builder
+function buildCssSelector(
+  tag: string,
+  attributes: { [key: string]: string }
+): string {
+  let selector = tag;
+  for (const [key, value] of Object.entries(attributes)) {
+    selector += `[${key}="${value}"]`;
+  }
+  return selector;
+}
+
+const emailInput = buildCssSelector('input', { type: 'email', name: 'email' });
+console.log(emailInput); // input[type="email"][name="email"]
+
+// 📌 Data validator
+function validateUserData(
+  username: string,
+  email: string,
+  age: number
+): { valid: boolean; errors: string[] } {
+  const errors: string[] = [];
+  
+  if (username.length < 3) {
+    errors.push('Username must be at least 3 characters');
+  }
+  if (!email.includes('@')) {
+    errors.push('Invalid email format');
+  }
+  if (age < 18) {
+    errors.push('Age must be at least 18');
+  }
+  
+  return {
+    valid: errors.length === 0,
+    errors: errors
+  };
+}
+
+const result = validateUserData('jo', 'invalid-email', 15);
+console.log(result);
+// { valid: false, errors: [...] }
+
+================================================================================
+4. OPTIONAL PARAMETERS (Tham số tùy chọn)
+================================================================================
+
+📌 Cú pháp: Sử dụng dấu ?
+
+function functionName(required: type, optional?: type): returnType {
+  // function body
+}
+
+⚠️ LƯU Ý: Optional parameters phải ở cuối danh sách parameters
+
+✅ Ví dụ cơ bản
+
+// 📌 Optional parameter đơn giản
+function greetUser(name: string, title?: string): string {
+  if (title) {
+    return `Hello, ${title} ${name}!`;
+  }
+  return `Hello, ${name}!`;
+}
+
+console.log(greetUser('John')); 
+// Output: Hello, John!
+
+console.log(greetUser('John', 'Mr.')); 
+// Output: Hello, Mr. John!
+
+// 📌 Nhiều optional parameters
+function createUrl(
+  protocol: string,
+  domain: string,
+  path?: string,
+  query?: string
+): string {
+  let url = `${protocol}://${domain}`;
+  
+  if (path) {
+    url += path;
+  }
+  
+  if (query) {
+    url += `?${query}`;
+  }
+  
+  return url;
+}
+
+console.log(createUrl('https', 'example.com'));
+// https://example.com
+
+console.log(createUrl('https', 'example.com', '/login'));
+// https://example.com/login
+
+console.log(createUrl('https', 'example.com', '/search', 'q=typescript'));
+// https://example.com/search?q=typescript
+
+// 📌 Optional với type checking
+function getElementSelector(
+  id?: string,
+  className?: string,
+  tagName?: string
+): string {
+  if (id) {
+    return `#${id}`;
+  }
+  if (className) {
+    return `.${className}`;
+  }
+  if (tagName) {
+    return tagName;
+  }
+  return '*'; // default selector
+}
+
+console.log(getElementSelector('login-btn')); // #login-btn
+console.log(getElementSelector(undefined, 'button')); // .button
+console.log(getElementSelector(undefined, undefined, 'input')); // input
+
+--------------------------------------------------------------------------------
+
+🎯 Ví dụ thực tế trong Automation
+
+// 📌 Page navigation với optional timeout
+function navigateToPage(url: string, timeout?: number): void {
+  const actualTimeout = timeout || 30000; // default 30s
+  console.log(`Navigating to ${url} with timeout ${actualTimeout}ms`);
+}
+
+navigateToPage('https://example.com');
+navigateToPage('https://example.com', 60000);
+
+// 📌 Login function với optional remember me
+interface LoginCredentials {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
+}
+
+function login(credentials: LoginCredentials): void {
+  console.log('Email:', credentials.email);
+  console.log('Password:', credentials.password);
+  console.log('Remember me:', credentials.rememberMe || false);
+}
+
+login({ email: 'user@example.com', password: 'Pass@123' });
+login({ email: 'user@example.com', password: 'Pass@123', rememberMe: true });
+
+// 📌 Wait function với optional message
+function waitFor(milliseconds: number, message?: string): void {
+  if (message) {
+    console.log(`Waiting ${milliseconds}ms: ${message}`);
+  } else {
+    console.log(`Waiting ${milliseconds}ms...`);
+  }
+}
+
+waitFor(5000);
+waitFor(5000, 'Loading page');
+
+================================================================================
+5. DEFAULT PARAMETERS (Tham số mặc định)
+================================================================================
+
+📌 Cú pháp: Gán giá trị mặc định cho parameter
+
+function functionName(param: type = defaultValue): returnType {
+  // function body
+}
+
+💡 Ưu điểm: Không cần kiểm tra undefined như optional parameters
+
+✅ Ví dụ cơ bản
+
+// 📌 Default parameter đơn giản
+function greet(name: string, greeting: string = 'Hello'): string {
+  return `${greeting}, ${name}!`;
+}
+
+console.log(greet('Alice')); 
+// Output: Hello, Alice!
+
+console.log(greet('Alice', 'Hi')); 
+// Output: Hi, Alice!
+
+// 📌 Default với number
+function calculateTotal(price: number, tax: number = 0.1): number {
+  return price + (price * tax);
+}
+
+console.log(calculateTotal(100)); // 110 (10% tax)
+console.log(calculateTotal(100, 0.2)); // 120 (20% tax)
+
+// 📌 Default với boolean
+function createConfig(
+  url: string,
+  headless: boolean = true,
+  timeout: number = 30000
+): object {
+  return { url, headless, timeout };
+}
+
+console.log(createConfig('https://example.com'));
+// { url: 'https://example.com', headless: true, timeout: 30000 }
+
+console.log(createConfig('https://example.com', false, 60000));
+// { url: 'https://example.com', headless: false, timeout: 60000 }
+
+// 📌 Default với array
+function processItems(items: string[] = []): number {
+  return items.length;
+}
+
+console.log(processItems()); // 0
+console.log(processItems(['a', 'b', 'c'])); // 3
+
+// 📌 Default với object
+function setupBrowser(
+  options: { headless: boolean; timeout: number } = { headless: true, timeout: 30000 }
+): void {
+  console.log('Headless:', options.headless);
+  console.log('Timeout:', options.timeout);
+}
+
+setupBrowser();
+setupBrowser({ headless: false, timeout: 60000 });
+
+--------------------------------------------------------------------------------
+
+💡 Optional vs Default Parameters
+
++---------------------------+----------------------+----------------------+
+| Đặc điểm                  | Optional (?)         | Default (=)          |
++---------------------------+----------------------+----------------------+
+| Cú pháp                   | param?: type         | param: type = value  |
+| Giá trị khi không truyền  | undefined            | Giá trị mặc định     |
+| Cần kiểm tra undefined    | ✅ Có                | ❌ Không cần         |
+| Type                      | type | undefined    | type                 |
+| Linh hoạt                 | ✅ Cao hơn           | ⚠️ Cố định           |
+| Dùng khi                  | Giá trị có thể null  | Có giá trị mặc định  |
++---------------------------+----------------------+----------------------+
+
+// ⚠️ Optional - Phải kiểm tra
+function greetOptional(name: string, title?: string): string {
+  if (title) { // Phải check
+    return `Hello, ${title} ${name}`;
+  }
+  return `Hello, ${name}`;
+}
+
+// ✅ Default - Không cần kiểm tra
+function greetDefault(name: string, title: string = ''): string {
+  return title ? `Hello, ${title} ${name}` : `Hello, ${name}`;
+}
+
+--------------------------------------------------------------------------------
+
+🎯 Ví dụ thực tế trong Automation
+
+// 📌 Retry mechanism với default attempts
+function retryAction(
+  action: () => void,
+  maxAttempts: number = 3,
+  delayMs: number = 1000
+): void {
+  let attempts = 0;
+  
+  while (attempts < maxAttempts) {
+    try {
+      console.log(`Attempt ${attempts + 1}/${maxAttempts}`);
+      action();
+      console.log('Action successful!');
+      break;
+    } catch (error) {
+      attempts++;
+      if (attempts < maxAttempts) {
+        console.log(`Waiting ${delayMs}ms before retry...`);
+      } else {
+        console.log('Max attempts reached. Action failed.');
+      }
+    }
+  }
+}
+
+// Sử dụng
+retryAction(() => console.log('Executing action'));
+retryAction(() => console.log('Executing action'), 5);
+retryAction(() => console.log('Executing action'), 5, 2000);
+
+// 📌 Build selector với default strategies
+function buildSelector(
+  value: string,
+  strategy: 'id' | 'class' | 'css' | 'xpath' = 'css'
+): string {
+  switch (strategy) {
+    case 'id':
+      return `#${value}`;
+    case 'class':
+      return `.${value}`;
+    case 'css':
+      return value;
+    case 'xpath':
+      return `//*[@id="${value}"]`;
+    default:
+      return value;
+  }
+}
+
+console.log(buildSelector('login-btn')); // login-btn (css)
+console.log(buildSelector('login-btn', 'id')); // #login-btn
+console.log(buildSelector('btn-primary', 'class')); // .btn-primary
+
+// 📌 Logger với default log level
+type LogLevel = 'info' | 'warn' | 'error';
+
+function log(
+  message: string,
+  level: LogLevel = 'info',
+  timestamp: boolean = true
+): void {
+  const time = timestamp ? `[${new Date().toISOString()}] ` : '';
+  const prefix = level.toUpperCase();
+  console.log(`${time}${prefix}: ${message}`);
+}
+
+log('Application started');
+log('Warning: Low memory', 'warn');
+log('Error occurred', 'error', false);
+
+================================================================================
+6. REST PARAMETERS (Tham số còn lại)
+================================================================================
+
+📌 Cú pháp: Sử dụng ... (spread operator)
+
+function functionName(...params: type[]): returnType {
+  // params là một array
+}
+
+💡 Cho phép truyền số lượng tham số không xác định
+
+✅ Ví dụ cơ bản
+
+// 📌 Sum nhiều numbers
+function sum(...numbers: number[]): number {
+  return numbers.reduce((total, num) => total + num, 0);
+}
+
+console.log(sum(1, 2, 3)); // 6
+console.log(sum(1, 2, 3, 4, 5)); // 15
+console.log(sum(10)); // 10
+
+// 📌 Concat nhiều strings
+function concatenate(...strings: string[]): string {
+  return strings.join(' ');
+}
+
+console.log(concatenate('Hello', 'World')); // Hello World
+console.log(concatenate('TypeScript', 'is', 'awesome')); // TypeScript is awesome
+
+// 📌 Rest parameters với tham số khác
+function buildUrl(baseUrl: string, ...paths: string[]): string {
+  return baseUrl + '/' + paths.join('/');
+}
+
+console.log(buildUrl('https://example.com', 'users', 'profile'));
+// https://example.com/users/profile
+
+console.log(buildUrl('https://example.com', 'api', 'v1', 'products', '123'));
+// https://example.com/api/v1/products/123
+
+--------------------------------------------------------------------------------
+
+🎯 Ví dụ thực tế trong Automation
+
+// 📌 Log nhiều messages cùng lúc
+function logMessages(level: 'info' | 'error', ...messages: string[]): void {
+  messages.forEach(msg => {
+    console.log(`[${level.toUpperCase()}] ${msg}`);
+  });
+}
+
+logMessages('info', 'Test started', 'Opening browser', 'Navigating to page');
+logMessages('error', 'Element not found', 'Test failed');
+
+// 📌 Combine selectors
+function combineSelectors(...selectors: string[]): string {
+  return selectors.join(', ');
+}
+
+const selector = combineSelectors('#submit', '.btn-primary', '[data-test="submit"]');
+console.log(selector);
+// #submit, .btn-primary, [data-test="submit"]
+
+// 📌 Validate nhiều emails
+function validateEmails(...emails: string[]): boolean[] {
+  return emails.map(email => email.includes('@') && email.includes('.'));
+}
+
+const results = validateEmails('user1@test.com', 'invalid', 'user2@test.com');
+console.log(results); // [true, false, true]
+
+================================================================================
+7. FUNCTION OVERLOADING (Nạp chồng hàm)
+================================================================================
+
+📌 Function Overloading: Định nghĩa nhiều signature cho cùng 1 function
+
+💡 Tại sao cần Function Overloading?
+- Cho phép function chấp nhận nhiều loại tham số khác nhau
+- Cung cấp IntelliSense tốt hơn
+- Type-safe cho từng trường hợp sử dụng
+
+✅ Ví dụ cơ bản
+
+// Overload signatures (Khai báo các signatures)
+function buildSelector(id: string): string;
+function buildSelector(tag: string, className: string): string;
+function buildSelector(tag: string, id: string, className: string): string;
+
+// Implementation signature (Thực thi)
+function buildSelector(
+  arg1: string,
+  arg2?: string,
+  arg3?: string
+): string {
+  if (arg2 === undefined && arg3 === undefined) {
+    return `#${arg1}`; // Only ID
+  } else if (arg3 === undefined) {
+    return `${arg1}.${arg2}`; // Tag + Class
+  } else {
+    return `${arg1}#${arg2}.${arg3}`; // Tag + ID + Class
+  }
+}
+
+// Sử dụng
+console.log(buildSelector('submit')); // #submit
+console.log(buildSelector('button', 'btn-primary')); // button.btn-primary
+console.log(buildSelector('button', 'submit', 'btn-primary')); 
+// button#submit.btn-primary
+
+--------------------------------------------------------------------------------
+
+🎯 Ví dụ chi tiết
+
+// 📌 VÍ DỤ 1: Click element với nhiều options
+
+// Overload signatures
+function click(selector: string): void;
+function click(selector: string, options: { timeout: number }): void;
+function click(selector: string, options: { timeout: number; force: boolean }): void;
+
+// Implementation
+function click(
+  selector: string,
+  options?: { timeout?: number; force?: boolean }
+): void {
+  console.log(`Clicking: ${selector}`);
+  
+  if (options?.timeout) {
+    console.log(`Timeout: ${options.timeout}ms`);
+  }
+  
+  if (options?.force) {
+    console.log('Force click: true');
+  }
+}
+
+// Sử dụng
+click('#submit');
+click('#submit', { timeout: 5000 });
+click('#submit', { timeout: 5000, force: true });
+
+// 📌 VÍ DỤ 2: Wait function với nhiều kiểu
+
+// Overload signatures
+function wait(milliseconds: number): void;
+function wait(selector: string): void;
+function wait(callback: () => boolean): void;
+
+// Implementation
+function wait(arg: number | string | (() => boolean)): void {
+  if (typeof arg === 'number') {
+    console.log(`Waiting ${arg}ms`);
+  } else if (typeof arg === 'string') {
+    console.log(`Waiting for selector: ${arg}`);
+  } else if (typeof arg === 'function') {
+    console.log('Waiting for condition');
+  }
+}
+
+// Sử dụng
+wait(5000);                    // Wait milliseconds
+wait('#content');              // Wait for selector
+wait(() => true);              // Wait for condition
+
+// 📌 VÍ DỤ 3: getValue với nhiều return types
+
+// Overload signatures
+function getValue(selector: string, attribute: 'text'): string;
+function getValue(selector: string, attribute: 'value'): string;
+function getValue(selector: string, attribute: 'count'): number;
+function getValue(selector: string, attribute: 'visible'): boolean;
+
+// Implementation
+function getValue(
+  selector: string,
+  attribute: 'text' | 'value' | 'count' | 'visible'
+): string | number | boolean {
+  switch (attribute) {
+    case 'text':
+      return 'Sample text';
+    case 'value':
+      return 'input value';
+    case 'count':
+      return 5;
+    case 'visible':
+      return true;
+  }
+}
+
+// Sử dụng - TypeScript biết chính xác return type
+const text: string = getValue('#title', 'text');
+const value: string = getValue('#input', 'value');
+const count: number = getValue('.items', 'count');
+const visible: boolean = getValue('#modal', 'visible');
+
+// 📌 VÍ DỤ 4: Parse data với nhiều types
+
+// Overload signatures
+function parseData(data: string): object;
+function parseData(data: string, returnArray: true): any[];
+function parseData(data: string, returnArray: false): object;
+
+// Implementation
+function parseData(data: string, returnArray?: boolean): object | any[] {
+  const parsed = JSON.parse(data);
+  
+  if (returnArray === true) {
+    return Array.isArray(parsed) ? parsed : [parsed];
+  }
+  
+  return parsed;
+}
+
+// Sử dụng
+const obj = parseData('{"name": "John"}');           // object
+const arr = parseData('[1,2,3]', true);              // any[]
+const obj2 = parseData('{"name": "Jane"}', false);   // object
+
+--------------------------------------------------------------------------------
+
+🎯 Ví dụ thực tế trong Automation
+
+// 📌 Navigate function với overloading
+function navigate(url: string): void;
+function navigate(url: string, timeout: number): void;
+function navigate(url: string, timeout: number, waitForSelector: string): void;
+
+function navigate(
+  url: string,
+  timeout?: number,
+  waitForSelector?: string
+): void {
+  console.log(`Navigating to: ${url}`);
+  
+  if (timeout) {
+    console.log(`Timeout: ${timeout}ms`);
+  }
+  
+  if (waitForSelector) {
+    console.log(`Waiting for selector: ${waitForSelector}`);
+  }
+}
+
+// Sử dụng
+navigate('https://example.com');
+navigate('https://example.com', 30000);
+navigate('https://example.com', 30000, '#content');
+
+// 📌 Fill form với nhiều kiểu input
+
+interface TextOptions {
+  delay?: number;
+  clear?: boolean;
+}
+
+interface SelectOptions {
+  label?: string;
+  value?: string;
+  index?: number;
+}
+
+// Overload signatures
+function fill(selector: string, value: string): void;
+function fill(selector: string, value: string, options: TextOptions): void;
+function fill(selector: string, options: SelectOptions): void;
+
+// Implementation
+function fill(
+  selector: string,
+  valueOrOptions: string | SelectOptions,
+  options?: TextOptions
+): void {
+  console.log(`Filling: ${selector}`);
+  
+  if (typeof valueOrOptions === 'string') {
+    console.log(`Value: ${valueOrOptions}`);
+    if (options?.delay) {
+      console.log(`Delay: ${options.delay}ms`);
+    }
+    if (options?.clear) {
+      console.log('Clear before fill: true');
+    }
+  } else {
+    if (valueOrOptions.label) {
+      console.log(`Select by label: ${valueOrOptions.label}`);
+    }
+    if (valueOrOptions.value) {
+      console.log(`Select by value: ${valueOrOptions.value}`);
+    }
+    if (valueOrOptions.index !== undefined) {
+      console.log(`Select by index: ${valueOrOptions.index}`);
+    }
+  }
+}
+
+// Sử dụng
+fill('#email', 'user@test.com');
+fill('#email', 'user@test.com', { delay: 100, clear: true });
+fill('#country', { label: 'Vietnam' });
+fill('#country', { value: 'vn' });
+fill('#country', { index: 2 });
+
+--------------------------------------------------------------------------------
+
+💡 Best Practices cho Function Overloading
+
+✅ DOs:
+1. Overload signatures phải cụ thể hơn implementation
+2. Implementation signature phải cover tất cả overload cases
+3. Dùng khi function thực sự có nhiều cách sử dụng khác nhau
+4. Đặt overload từ cụ thể nhất đến chung nhất
+
+❌ DON'Ts:
+1. Không overload quá nhiều (>5 signatures)
+2. Không dùng khi có thể dùng optional/default parameters
+3. Không để implementation signature public (nó chỉ để implement)
+
+// ❌ Quá phức tạp
+function process(a: string): void;
+function process(a: string, b: number): void;
+function process(a: string, b: number, c: boolean): void;
+function process(a: string, b: number, c: boolean, d: object): void;
+function process(a: string, b: number, c: boolean, d: object, e: any[]): void;
+
+// ✅ Dùng options object thay thế
+interface ProcessOptions {
+  b?: number;
+  c?: boolean;
+  d?: object;
+  e?: any[];
+}
+
+function process(a: string, options?: ProcessOptions): void {
+  // Implementation
+}
+
+================================================================================
+8. BEST PRACTICES
+================================================================================
+
+✅ DOs - Nên làm
+
+// 1. ✅ LUÔN khai báo type cho parameters
+function createUser(name: string, age: number): object {
+  return { name, age };
+}
+
+// 2. ✅ NÊN khai báo return type rõ ràng
+function getUrl(path: string): string {
+  return `https://example.com${path}`;
+}
+
+// 3. ✅ Dùng arrow function cho callbacks
+const numbers = [1, 2, 3, 4, 5];
+const doubled = numbers.map((n: number): number => n * 2);
+
+// 4. ✅ Default parameters thay vì optional khi có giá trị mặc định
+function setTimeout(ms: number = 5000): void {
+  console.log(`Timeout: ${ms}ms`);
+}
+
+// 5. ✅ Rest parameters cho số lượng tham số không xác định
+function combineUrls(...paths: string[]): string {
+  return paths.join('/');
+}
+
+// 6. ✅ Đặt tên function rõ ràng, mô tả hành động
+function validateEmailFormat(email: string): boolean {
+  return email.includes('@');
+}
+
+function buildCssSelector(tag: string, id: string): string {
+  return `${tag}#${id}`;
+}
+
+❌ DON'Ts - Tránh làm
+
+// 1. ❌ KHÔNG bỏ qua type cho parameters
+function greet(name) { // ❌ Missing type
+  return `Hello, ${name}`;
+}
+
+// 2. ❌ KHÔNG dùng any nếu không cần thiết
+function process(data: any): any { // ❌ Avoid any
+  return data;
+}
+
+// 3. ❌ KHÔNG đặt optional parameters trước required
+function createUser(age?: number, name: string) { // ❌ Wrong order
+  // ...
+}
+
+// 4. ❌ KHÔNG tạo function quá dài, quá phức tạp
+// Split thành nhiều functions nhỏ hơn
+
+// 5. ❌ KHÔNG dùng function declaration cho simple callbacks
+// Dùng arrow function thay thế
+
+--------------------------------------------------------------------------------
+
+🎯 Ví dụ hoàn chỉnh - Page Helper Class
+
+// ========== TYPES & INTERFACES ==========
+type BrowserType = 'chrome' | 'firefox' | 'safari';
+
+interface PageConfig {
+  url: string;
+  timeout?: number;
+  headless?: boolean;
+}
+
+interface Selector {
+  type: 'id' | 'class' | 'css' | 'xpath';
+  value: string;
+}
+
+// ========== HELPER FUNCTIONS ==========
+
+// Function Declaration - Main helpers
+function buildFullUrl(
+  protocol: string,
+  domain: string,
+  path: string = '/'
+): string {
+  return `${protocol}://${domain}${path}`;
+}
+
+function validateUrl(url: string): boolean {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// Arrow Functions - Simple utilities
+const formatTimeout = (seconds: number): number => seconds * 1000;
+
+const isValidSelector = (selector: string): boolean => 
+  selector.length > 0 && !selector.includes(' ');
+
+const getCurrentTime = (): string => new Date().toISOString();
+
+// Optional Parameters
+function createPageConfig(
+  url: string,
+  timeout?: number,
+  headless?: boolean
+): PageConfig {
+  const config: PageConfig = { url };
+  
+  if (timeout !== undefined) {
+    config.timeout = timeout;
+  }
+  
+  if (headless !== undefined) {
+    config.headless = headless;
+  }
+  
+  return config;
+}
+
+// Default Parameters
+function initBrowser(
+  browser: BrowserType = 'chrome',
+  headless: boolean = true,
+  timeout: number = 30000
+): void {
+  console.log('=== Browser Configuration ===');
+  console.log('Browser:', browser);
+  console.log('Headless:', headless);
+  console.log('Timeout:', timeout);
+}
+
+// Rest Parameters
+function logSteps(...steps: string[]): void {
+  console.log('\n=== Test Steps ===');
+  steps.forEach((step, index) => {
+    console.log(`${index + 1}. ${step}`);
+  });
+}
+
+// Function Overloading
+function buildSelector(id: string): string;
+function buildSelector(type: 'id' | 'class', value: string): string;
+function buildSelector(
+  arg1: string,
+  arg2?: string
+): string {
+  if (arg2 === undefined) {
+    return `#${arg1}`;
+  }
+  
+  if (arg1 === 'id') {
+    return `#${arg2}`;
+  } else if (arg1 === 'class') {
+    return `.${arg2}`;
+  }
+  
+  return arg1;
+}
+
+// ========== USAGE EXAMPLES ==========
+
+// 1. URL Building
+const homeUrl = buildFullUrl('https', 'example.com', '/home');
+const loginUrl = buildFullUrl('https', 'example.com', '/login');
+
+console.log('Home URL:', homeUrl);
+console.log('Login URL:', loginUrl);
+
+// 2. URL Validation
+console.log('\n=== URL Validation ===');
+console.log('Valid URL:', validateUrl(homeUrl));
+console.log('Invalid URL:', validateUrl('not-a-url'));
+
+// 3. Page Config
+const config1 = createPageConfig('https://example.com');
+const config2 = createPageConfig('https://example.com', 60000);
+const config3 = createPageConfig('https://example.com', 60000, false);
+
+console.log('\n=== Page Configs ===');
+console.log('Config 1:', config1);
+console.log('Config 2:', config2);
+console.log('Config 3:', config3);
+
+// 4. Browser Init
+console.log('\n=== Browser Init ===');
+initBrowser(); // Defaults
+initBrowser('firefox', false, 60000); // Custom
+
+// 5. Logging Steps
+logSteps(
+  'Navigate to login page',
+  'Enter credentials',
+  'Click submit button',
+  'Verify dashboard loaded'
+);
+
+// 6. Selector Building
+console.log('\n=== Selectors ===');
+console.log('By ID:', buildSelector('login-btn'));
+console.log('By Class:', buildSelector('class', 'btn-primary'));
+console.log('By ID (explicit):', buildSelector('id', 'submit'));
+
+// 7. Arrow Function với Array
+const pages = ['/home', '/about', '/contact'];
+const fullPageUrls = pages.map((path: string): string => 
+  buildFullUrl('https', 'example.com', path)
+);
+
+console.log('\n=== Full Page URLs ===');
+fullPageUrls.forEach(url => console.log(url));
+
+// 8. Current Time
+console.log('\n=== Timestamp ===');
+console.log('Current time:', getCurrentTime());
+console.log('Timeout (5s):', formatTimeout(5), 'ms');
+
+================================================================================
+TÓM TẮT - CHEAT SHEET
+================================================================================
+
+Function Declaration
+---------------------
+function name(param: type): returnType {
+  return value;
+}
+
+Arrow Function
+--------------
+const name = (param: type): returnType => value;
+const name = (param: type): returnType => { return value; };
+
+Optional Parameters
+-------------------
+function name(required: type, optional?: type): returnType {}
+
+Default Parameters
+------------------
+function name(param: type = defaultValue): returnType {}
+
+Rest Parameters
+---------------
+function name(...params: type[]): returnType {}
+
+Return Types
+------------
+void      - Không return
+never     - Không bao giờ return
+string    - Return string
+number    - Return number
+boolean   - Return boolean
+object    - Return object
+Type[]    - Return array
+
+Quy tắc vàng
+------------
+1. LUÔN khai báo type cho parameters
+2. NÊN khai báo return type
+3. Arrow function cho callbacks
+4. Default parameters khi có giá trị mặc định
+5. Optional parameters khi giá trị có thể undefined
+6. Rest parameters cho số lượng không xác định
+
+================================================================================
+BÀI TẬP THỰC HÀNH
+================================================================================
+
+Bài 1: Basic Functions
+-----------------------
+// TODO: Tạo function buildLoginUrl
+// Parameters: baseUrl (string), locale (string, optional, default 'en')
+// Return: string
+// Example: buildLoginUrl('https://example.com', 'vi') 
+// => 'https://example.com/vi/login'
+
+Bài 2: Arrow Functions
+----------------------
+// TODO: Tạo arrow function isValidPassword
+// Parameter: password (string)
+// Return: boolean (length >= 8 và có chữ hoa)
+
+Bài 3: Rest Parameters
+----------------------
+// TODO: Tạo function combineSelectors
+// Parameters: ...selectors (string[])
+// Return: string (kết hợp các selectors bằng dấu phẩy)
+// Example: combineSelectors('#id', '.class', 'tag') 
+// => '#id, .class, tag'
+
+Bài 4: Function Overloading
+----------------------------
+// TODO: Tạo function click với overloading
+// Signature 1: click(selector: string): void
+// Signature 2: click(selector: string, timeout: number): void
+// Signature 3: click(selector: string, timeout: number, retry: number): void
+
+================================================================================
+TÀI LIỆU THAM KHẢO
+================================================================================
+
+- TypeScript Handbook - Functions: 
+  https://www.typescriptlang.org/docs/handbook/2/functions.html
+  
+- Arrow Functions: 
+  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions
+  
+- TypeScript Deep Dive - Functions:
+  https://basarat.gitbook.io/typescript/type-system/functions
+
+================================================================================
+🎓 End of Module
+Functions trong TypeScript for Automation Testing
+================================================================================
